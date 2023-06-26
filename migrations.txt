@@ -1,19 +1,78 @@
-create table users(
+CREATE TABLE users(
   id SERIAL PRIMARY KEY,
   username VARCHAR(255) NOT NULL,
   password VARCHAR(255) NOT NULL,
   salt VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL DEFAULT '',
-  emailIsValid BOOLEAN NULL DEFAULT FALSE,
+  emailIsValid BOOLEAN NOT NULL DEFAULT FALSE,
   termsIsValid BOOLEAN NOT NULL DEFAULT FALSE
 );
 
-create table users(
+CREATE TABLE contributors(
   id SERIAL PRIMARY KEY,
   username VARCHAR(255) NOT NULL,
   password VARCHAR(255) NOT NULL,
   salt VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL DEFAULT '',
-  emailIsValid BOOLEAN NULL DEFAULT FALSE,
-  termsIsValid BOOLEAN NOT NULL DEFAULT FALSE
+  emailIsValid BOOLEAN NOT NULL DEFAULT FALSE,
+  termsIsValid BOOLEAN NOT NULL DEFAULT FALSE,
+  image VARCHAR(255) NOT NULL,
+  Description TEXT NOT NULL DEFAULT '',
+  societyAdress VARCHAR(255) NOT NULL DEFAULT '',
+  siren INT NOT NULL,
+  paypalAdress VARCHAR(255) NOT NULL,
+  kbis VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE credits(
+  id SERIAL PRIMARY KEY,
+  purchaseDate TIMESTAMP NOT NULL,
+  validity INT NOT NULL DEFAULT 63115200,
+  price INT NOT NULL,
+  user_id INT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE discounts(
+  id SERIAL PRIMARY KEY,
+  acquisitionDate TIMESTAMP NOT NULL,
+  validity INT NOT NULL DEFAULT 63115200,
+  percentage INT NOT NULL,
+  user_id INT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE libraries(
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  image VARCHAR(255) NOT NULL,
+  type ENUM('Scene','Character','Item','Image_and_police'),
+  price INT NOT NULL,
+  state ENUM('accepted','validating','rejected'),
+  releaseDate TIMESTAMP NOT NULL,
+  salesNumber INT NOT NULL,
+  encouragementsNumber INT NOT NULL,
+  owner_id INT NOT NULL,
+  FOREIGN KEY (owner_id) REFERENCES contributors(id)
+);
+
+CREATE TABLE tags(
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255),
+  state ENUM('accepeted','stopped','modification')
+);
+
+CREATE TABLE libraries_tags(
+  library_id INT NOT NULL,
+  tag_id INT NULL,
+  FOREIGN KEY (library_id) REFERENCES libraries(id),
+  FOREIGN KEY (tag_id) REFERENCES tags(id)
+);
+
+CREATE TABLE users_libraries(
+  user_id INT NOT NULL,
+  library_id INT NULL,
+  purchaseDate TIMESTAMP NOT NULL,
+  FOREIGN KEY (library_id) REFERENCES libraries(id),
+  FOREIGN KEY (user_id) REFERENCES users(id)
 );
