@@ -46,6 +46,7 @@ CREATE TABLE libraries(
   id SERIAL PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
   image VARCHAR(255) NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
   type ENUM('Scene','Character','Item','Image_and_police'),
   price INT NOT NULL,
   state ENUM('accepted','validating','rejected'),
