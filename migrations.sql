@@ -21,7 +21,7 @@ CREATE TABLE prices(
 
 CREATE TABLE credits(
   id SERIAL PRIMARY KEY,
-  purchaseDate TIMESTAMP NOT NULL,
+  purchaseDate DATETIME NOT NULL,
   validity INT NOT NULL DEFAULT 63115200,
   price INT NOT NULL,
   user_id INT NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE credits(
 
 CREATE TABLE discounts(
   id SERIAL PRIMARY KEY,
-  acquisitionDate TIMESTAMP NOT NULL,
+  acquisitionDate DATETIME NOT NULL,
   validity INT NOT NULL DEFAULT 63115200,
   percentage INT NOT NULL,
   user_id INT NOT NULL,
@@ -45,7 +45,7 @@ CREATE TABLE libraries(
   type ENUM('Scene','Character','Item','Image_and_police'),
   price INT NOT NULL,
   state ENUM('accepted','validating','rejected'),
-  releaseDate TIMESTAMP NOT NULL,
+  releaseDate DATETIME NOT NULL,
   salesNumber INT NOT NULL,
   encouragementsNumber INT NOT NULL,
   owner_id INT NOT NULL,
@@ -68,7 +68,7 @@ CREATE TABLE libraries_tags(
 CREATE TABLE users_libraries(
   user_id INT NOT NULL,
   library_id INT NULL,
-  purchaseDate TIMESTAMP NOT NULL,
+  purchaseDate DATETIME NOT NULL,
   FOREIGN KEY (library_id) REFERENCES libraries(id),
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
@@ -76,7 +76,7 @@ CREATE TABLE users_libraries(
 CREATE TABLE receipts(
   purchase_id INT NOT NULL,
   tags VARCHAR(255),
-  purchaseDate TIMESTAMP NOT NULL,
+  purchaseDate DATETIME NOT NULL,
   name VARCHAR(255) NOT NULL,
   price INT NOT NULL,
   FOREIGN KEY (purchase_id) REFERENCES users_libraries(id)
@@ -84,7 +84,7 @@ CREATE TABLE receipts(
 
 CREATE TABLE approvement(
   library_id INT NOT NULL,
-  date TIMESTAMP NOT NULL,
+  date DATETIME NOT NULL,
   commentary TEXT NOT NULL DEFAULT '',
   isAccepted BOOLEAN NOT NULL,
   FOREIGN KEY (library_id) REFERENCES libraries(id)
