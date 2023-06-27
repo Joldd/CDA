@@ -7,12 +7,13 @@
     <title>Profile</title>
   </head>
 
-  <body style="background-color :#1C1F24">
+  <body style="background-color :#1C1F24; color:white">
 
-    <nav class="navbar" style="background-color :#464646; color:white">
-      <div class="m-2">
+    <!-- Header -->
+    <nav class="navbar" style="background-color :#464646; ">
+      <a href="index.html" class="m-2">
           <img src="..\static\img\logo.png" alt="Logo" height="100">
-      </div>
+      </a>
       <h2 class="" style="">
           Seccia Assets Store
       </h2>
@@ -22,20 +23,56 @@
       </a>
     </nav>
 
-    <main class="d-flex justify-content-between m-5">
-      <div >
-        <a href="inscriptionUser.html">
-          <button class="btn btn-lg btn-secondary" style="font-size:500%">Utilisateur</button>
-        </a>
-      </div>
+    
+    <main >
+
+      <h1 style="padding-left:32%; padding-top:5%; font-weight: 700; font-size:400%;">Create an User Account</h1>
+
+      <!-- Boutons -->
+      <div class="d-flex justify-content-between">
+
+        <ul style="margin-left: 20%; margin-top: 5%;">
+          <li class="list-group-item mb-3">
+            <a href="inscriptionUser.html" >
+              <button class="btn btn-lg btn-custom pt-0 pb-0" style="font-size:500%; padding-left: 40%; padding-right: 40%;">PERSO</button>
+            </a> 
+          </li>
+          <li class="fw-semibold ms-5">Can't sell your game</li>
+          <li class="fw-semibold ms-5">Licenses can't be transfered</li>
+          <li class="fw-semibold ms-5">Licenses are cheaper</li>
+        </ul>
         
-      <div>
-        <a href="inscriptionCreator.html">
-          <button class="btn btn-lg btn-secondary" style="font-size:500%">Creator</button>
-        </a>
-      </div>  
+        <ul class="" style="margin-right: 20%; margin-top: 5%;">
+          <li class="list-group-item mb-3">
+            <a href="inscriptionCreator.html" >
+              <button class="btn btn-lg btn-custom pt-0 pb-0" style="font-size:500%; padding-left: 40%; padding-right: 40%; font-size:500%">PRO</button>
+            </a> 
+            <li class="fw-semibold ms-5">Can sell your game</li>
+            <li class="fw-semibold ms-5">Licenses can be transfered</li>
+            <li class="fw-semibold ms-5">Account link to a society</li>
+        </ul>
+
+      </div>
+
     </main>
     
   </body>
 
 </html>
+
+<style>
+  .btn-custom {
+    
+  --bs-btn-font-weight: 600;
+  --bs-btn-color: #000000;
+  --bs-btn-bg: #D9D9D9;
+  --bs-btn-border-color: #D9D9D9;
+  --bs-btn-hover-color: #000000;
+  --bs-btn-hover-bg: #A0A0A0;
+  --bs-btn-hover-border-color: #A0A0A0;
+  --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+  --bs-btn-active-color: var(--bs-btn-hover-color);
+  --bs-btn-active-bg: #{shade-color($bd-violet, 20%)};
+  --bs-btn-active-border-color: #{shade-color($bd-violet, 20%)};
+}
+</style>
