@@ -1,27 +1,22 @@
-CREATE TABLE users(
+CREATE TABLE account(
   id SERIAL PRIMARY KEY,
-  username VARCHAR(255) NOT NULL,
+  name VARCHAR(255),
   password VARCHAR(255) NOT NULL,
   salt VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL DEFAULT '',
-  emailIsValid BOOLEAN NOT NULL DEFAULT FALSE,
-  termsIsValid BOOLEAN NOT NULL DEFAULT FALSE
+  email VARCHAR(255) NOT NULL,
+  mailIsConfirmed BOOLEAN,
+  image VARCHAR(255),
+  Description TEXT,
+  societyAdress VARCHAR(255),
+  siren INT,
+  paypalAdress VARCHAR(255),
+  kbis VARCHAR(255)
 );
 
-CREATE TABLE contributors(
+CREATE TABLE prices(
   id SERIAL PRIMARY KEY,
-  username VARCHAR(255) NOT NULL,
-  password VARCHAR(255) NOT NULL,
-  salt VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL DEFAULT '',
-  emailIsValid BOOLEAN NOT NULL DEFAULT FALSE,
-  termsIsValid BOOLEAN NOT NULL DEFAULT FALSE,
-  image VARCHAR(255) NOT NULL,
-  Description TEXT NOT NULL DEFAULT '',
-  societyAdress VARCHAR(255) NOT NULL DEFAULT '',
-  siren INT NOT NULL,
-  paypalAdress VARCHAR(255) NOT NULL,
-  kbis VARCHAR(255) NOT NULL
+  minNumberPurchased INT NOT NULL,
+  price INT NOT NULL
 );
 
 CREATE TABLE credits(
@@ -60,7 +55,7 @@ CREATE TABLE libraries(
 CREATE TABLE tags(
   id SERIAL PRIMARY KEY,
   name VARCHAR(255),
-  state ENUM('accepeted','stopped','modification')
+  isActive BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE libraries_tags(
@@ -76,4 +71,21 @@ CREATE TABLE users_libraries(
   purchaseDate TIMESTAMP NOT NULL,
   FOREIGN KEY (library_id) REFERENCES libraries(id),
   FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE receipts(
+  purchase_id INT NOT NULL,
+  tags VARCHAR(255),
+  purchaseDate TIMESTAMP NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  price INT NOT NULL,
+  FOREIGN KEY (purchase_id) REFERENCES users_libraries(id)
+);
+
+CREATE TABLE approvement(
+  library_id INT NOT NULL,
+  date TIMESTAMP NOT NULL,
+  commentary TEXT NOT NULL DEFAULT '',
+  isAccepted BOOLEAN NOT NULL,
+  FOREIGN KEY (library_id) REFERENCES libraries(id)
 );
