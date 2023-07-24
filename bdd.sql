@@ -1,5 +1,5 @@
-CREATE TABLE account(
-  id SERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS account(
+  id INT NOT NULL,
   name VARCHAR(255),
   password VARCHAR(255) NOT NULL,
   salt VARCHAR(255) NOT NULL,
@@ -10,35 +10,39 @@ CREATE TABLE account(
   societyAdress VARCHAR(255),
   siren INT,
   paypalAdress VARCHAR(255),
-  kbis VARCHAR(255)
+  kbis VARCHAR(255),
+  PRIMARY KEY (id)
 );
 
-CREATE TABLE prices(
-  id SERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS prices(
+  id INT NOT NULL,
   minNumberPurchased INT NOT NULL,
-  price INT NOT NULL
+  price INT NOT NULL,
+  PRIMARY KEY (id)
 );
 
-CREATE TABLE credits(
-  id SERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS credits(
+  id INT NOT NULL,
   purchaseDate DATETIME NOT NULL,
   validity INT NOT NULL DEFAULT 63115200,
   price INT NOT NULL,
-  user_id INT NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES users(id)
+  account_id INT NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (account_id) REFERENCES account(id)
 );
 
-CREATE TABLE discounts(
-  id SERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS discounts(
+  id INT NOT NULL,
   acquisitionDate DATETIME NOT NULL,
   validity INT NOT NULL DEFAULT 63115200,
   percentage INT NOT NULL,
   user_id INT NOT NULL,
+  PRIMARY KEY (id),
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-CREATE TABLE libraries(
-  id SERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS libraries(
+  id INT NOT NULL,
   title VARCHAR(255) NOT NULL,
   image VARCHAR(255) NOT NULL,
   description TEXT NOT NULL DEFAULT '',
@@ -49,23 +53,25 @@ CREATE TABLE libraries(
   salesNumber INT NOT NULL,
   encouragementsNumber INT NOT NULL,
   owner_id INT NOT NULL,
+  PRIMARY KEY (id),
   FOREIGN KEY (owner_id) REFERENCES contributors(id)
 );
 
-CREATE TABLE tags(
-  id SERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS tags(
+  id INT NOT NULL,
   name VARCHAR(255),
-  isActive BOOLEAN DEFAULT FALSE
+  isActive BOOLEAN DEFAULT FALSE,
+  PRIMARY KEY (id)
 );
 
-CREATE TABLE libraries_tags(
+CREATE TABLE IF NOT EXISTS libraries_tags(
   library_id INT NOT NULL,
   tag_id INT NULL,
   FOREIGN KEY (library_id) REFERENCES libraries(id),
   FOREIGN KEY (tag_id) REFERENCES tags(id)
 );
 
-CREATE TABLE users_libraries(
+CREATE TABLE IF NOT EXISTS users_libraries(
   user_id INT NOT NULL,
   library_id INT NULL,
   purchaseDate DATETIME NOT NULL,
@@ -73,7 +79,7 @@ CREATE TABLE users_libraries(
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-CREATE TABLE receipts(
+CREATE TABLE IF NOT EXISTS receipts(
   purchase_id INT NOT NULL,
   tags VARCHAR(255),
   purchaseDate DATETIME NOT NULL,
@@ -82,7 +88,7 @@ CREATE TABLE receipts(
   FOREIGN KEY (purchase_id) REFERENCES users_libraries(id)
 );
 
-CREATE TABLE approvement(
+CREATE TABLE IF NOT EXISTS approvement(
   library_id INT NOT NULL,
   date DATETIME NOT NULL,
   commentary TEXT NOT NULL DEFAULT '',
