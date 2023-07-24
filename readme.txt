@@ -1,5 +1,7 @@
 Utilisation en local
     Installer Docker HUB
+    Installer la dernière version LTS de Node.js
+    Si première fois : npm install
     docker compose up --build
 
 server.cjs
@@ -7,9 +9,9 @@ server.cjs
     Crée le serveur
 
 package.json
-    Défini ce qu'il faut Installer
+    Définit ce qu'il faut Installer
 
 Dockerfile
 
 docker-compose
-    Défini la BDD
+    Définit la BDD

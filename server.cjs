@@ -1,7 +1,8 @@
 'use strict';
 
 const express = require('express');
-var mysql = require('mysql');
+const mysql = require('mysql');
+const Twig = require("twig");
 
 var con = mysql.createConnection({
   host: "cda-db",
@@ -10,7 +11,7 @@ var con = mysql.createConnection({
   database: "db"
 });
 
-//BDD
+////////////////////////////////////////////////BDD//////////////////////////////////////////////////////////////////////
 con.connect(function(err) {
   if (err) throw err;
   console.log("Connected to bdd cda-db!");
@@ -210,27 +211,47 @@ con.connect(function(err) {
 const PORT = 80;
 const HOST = '0.0.0.0';
 
-// App
+////////////////////////////////////////////////APP//////////////////////////////////////////////////////////////////////
 const app = express();
 
+app.set("twig options", {
+  allowAsync: true, // Allow asynchronous compiling
+  strict_variables: false
+});
+
 app.get('/', (req, res) => {
-  res.sendFile(('/usr/src/app/templates/index.html'));
+  let context = {
+    message : "Bonjour"
+  };
+  res.render('index.html.twig' , context);
 });
 
 app.get('/inscription', (req, res) => {
-  res.sendFile(('/usr/src/app/templates/inscription.html'));
+  let context = {
+    message : "Bonjour"
+  };
+  res.render('inscription.html.twig' , context);
 });
 
 app.get('/inscriptionUser', (req, res) => {
-  res.sendFile(('/usr/src/app/templates/inscriptionUser.html'));
+  let context = {
+    message : "Bonjour"
+  };
+  res.render('inscriptionUser.html.twig' , context);
 });
 
 app.get('/inscriptionCreator', (req, res) => {
-  res.sendFile(('/usr/src/app/templates/inscriptionCreator.html'));
+  let context = {
+    message : "Bonjour"
+  };
+  res.render('inscriptionCreator.html.twig' , context);
 });
 
 app.get('/profile', (req, res) => {
-  res.sendFile(('/usr/src/app/templates/profile.html'));
+  let context = {
+    message : "Bonjour"
+  };
+  res.render('profile.html.twig' , context);
 });
 
 app.use('/static', express.static('static'))
