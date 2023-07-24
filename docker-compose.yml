@@ -1,0 +1,29 @@
+version: "3.3"
+
+services:
+  cda:
+    build: "."
+    ports:
+      - "80:80"
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - cda-db
+
+  cda-db:
+    image: mariadb
+    restart: always
+    volumes:
+      - ./data-db:/var/lib/mysql:rw
+    environment:
+      - ALLOW_EMPTY_PASSWORD=false
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=tempPassword1234!
+      - MYSQL_DATABASE=db
+      - MYSQL_ROOT_PASSWORD=tempPassword1234!
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
