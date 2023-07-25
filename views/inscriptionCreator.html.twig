@@ -1,27 +1,14 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <link rel="stylesheet" href="/static/styles/specific.css">
-    <title>Profile</title>
+    <title>InscriptionCreator</title>
+    {% include 'includecss.html.twig' %}
+    {% include 'includescripts.html.twig' %}
   </head>
 
   <body style="background-color :#1C1F24">
 
-    <nav class="navbar" style="background-color :#464646; color:white">
-      <div class="m-2">
-          <img src="..\static\img\logo.png" alt="Logo" height="100">
-      </div>
-      <h2 class="" style="">
-          Seccia Assets Store
-      </h2>
-
-      <a href="/inscription">
-        <button id="inscription" class="btn btn-primary m-3">Retour</button>
-      </a>
-    </nav>
+    {% include 'header.html.twig' %}
 
     <main>
       <div class="my-5 modal position-static d-block" tabindex="-1" role="dialog" id="modalSignup">

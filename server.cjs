@@ -1,5 +1,6 @@
 'use strict';
 
+const tables = require("./scripts/bdd.cjs");
 const express = require('express');
 const mysql = require('mysql');
 const Twig = require("twig");
@@ -11,7 +12,7 @@ var con = mysql.createConnection({
   database: "db"
 });
 
-////////////////////////////////////////////////BDD//////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////BDD//////////////////////////////////////////////////////////////////////
 con.connect(function(err) {
   if (err) throw err;
   console.log("Connected to bdd cda-db!");
@@ -19,7 +20,7 @@ con.connect(function(err) {
   //Prices
   con.query(
     `CREATE TABLE IF NOT EXISTS prices(
-      id INT NOT NULL,
+      id INT NOT NULL AUTO_INCREMENT,
       minNumberPurchased INT NOT NULL,
       price INT NOT NULL,
       PRIMARY KEY (id)
@@ -35,7 +36,7 @@ con.connect(function(err) {
   //Account
   con.query(
     `CREATE TABLE IF NOT EXISTS account(
-      id INT NOT NULL,
+      id INT NOT NULL AUTO_INCREMENT,
       name VARCHAR(255),
       password VARCHAR(255) NOT NULL,
       salt VARCHAR(255) NOT NULL,
@@ -60,7 +61,7 @@ con.connect(function(err) {
   //Credits
   con.query(
     `CREATE TABLE IF NOT EXISTS credits(
-      id INT NOT NULL,
+      id INT NOT NULL AUTO_INCREMENT,
       purchaseDate DATETIME NOT NULL,
       validity INT NOT NULL DEFAULT 63115200,
       price INT NOT NULL,
@@ -79,7 +80,7 @@ con.connect(function(err) {
   //Discount
   con.query(
     `CREATE TABLE IF NOT EXISTS discounts(
-      id INT NOT NULL,
+      id INT NOT NULL AUTO_INCREMENT,
       acquisitionDate DATETIME NOT NULL,
       validity INT NOT NULL DEFAULT 63115200,
       percentage INT NOT NULL,
@@ -98,7 +99,7 @@ con.connect(function(err) {
   //Librairies
   con.query(
     `CREATE TABLE IF NOT EXISTS libraries(
-      id INT NOT NULL,
+      id INT NOT NULL AUTO_INCREMENT,
       title VARCHAR(255) NOT NULL,
       image VARCHAR(255) NOT NULL,
       description TEXT NOT NULL DEFAULT '',
@@ -123,7 +124,7 @@ con.connect(function(err) {
   //Tags
   con.query(
     `CREATE TABLE IF NOT EXISTS tags(
-      id INT NOT NULL,
+      id INT NOT NULL AUTO_INCREMENT,
       name VARCHAR(255),
       isActive BOOLEAN DEFAULT FALSE,
       PRIMARY KEY (id)
@@ -155,7 +156,7 @@ con.connect(function(err) {
   //User_Librairies
   con.query(
     `CREATE TABLE IF NOT EXISTS users_libraries(
-      id INT NOT NULL,
+      id INT NOT NULL AUTO_INCREMENT,
       account_id INT NOT NULL,
       library_id INT NULL,
       purchaseDate DATETIME NOT NULL,
@@ -214,6 +215,9 @@ const HOST = '0.0.0.0';
 ////////////////////////////////////////////////APP//////////////////////////////////////////////////////////////////////
 const app = express();
 
+app.use(express.json());       
+app.use(express.urlencoded({extended: true})); 
+
 app.set("twig options", {
   allowAsync: true, // Allow asynchronous compiling
   strict_variables: false
@@ -221,35 +225,45 @@ app.set("twig options", {
 
 app.get('/', (req, res) => {
   let context = {
-    message : "Bonjour"
+    index : true
   };
   res.render('index.html.twig' , context);
 });
 
 app.get('/inscription', (req, res) => {
-  let context = {
-    message : "Bonjour"
+  let context = { 
   };
   res.render('inscription.html.twig' , context);
 });
 
+app.post('/inscriptionUser', (req, res) => {
+  let context = {
+  };
+  if (req.body.password == req.body.repassword){
+    const a = new tables.Account(req.body.mail,req.body.password);
+    a.create();
+    res.redirect('/');
+  }
+  else{
+    context.message = "Passwords do not match";
+    res.render('inscriptionUser.html.twig' , context);
+  }
+});
+
 app.get('/inscriptionUser', (req, res) => {
   let context = {
-    message : "Bonjour"
   };
   res.render('inscriptionUser.html.twig' , context);
 });
 
 app.get('/inscriptionCreator', (req, res) => {
   let context = {
-    message : "Bonjour"
   };
   res.render('inscriptionCreator.html.twig' , context);
 });
 
 app.get('/profile', (req, res) => {
   let context = {
-    message : "Bonjour"
   };
   res.render('profile.html.twig' , context);
 });
