@@ -9,14 +9,17 @@
     <h2>
         Seccia Assets Store
     </h2>
-
-    {% if index == true %}
-    <a href="/inscription">
-        <button id="inscription" class="btn btn-custom m-3">Inscription</button>
-    </a>
+    {% if user is defined %}
+       <a href="/profile">
+            <button id="profile" class="btn btn-custom m-3">Profile</button>
+        </a> 
+    {% elseif index == true %}
+        <a href="/inscription">
+            <button id="inscription" class="btn btn-custom m-3">Inscription</button>
+        </a>
     {% else %}
-    <div>  
-    </div>
+        <div>  
+        </div>
     {% endif %}
 
 </nav>

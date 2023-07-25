@@ -6,59 +6,112 @@
     {% include 'includescripts.html.twig' %}
   </head>
 
-  <body style="background-color :#1C1F24">
+  <body style="background-color :#1C1F24; color:white">
 
     {% include 'header.html.twig' %}
 
-    <main>
-      <div class="my-5 modal position-static d-block" tabindex="-1" role="dialog" id="modalSignup">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content rounded-5 border-0">
-            <div class="modal-header p-5 pb-4 border-bottom-0">
-              <!-- <h5 class="modal-title">Modal title</h5> -->
-              <h2 class="fw-bold mb-0">Inscription Creator</h2>
-            </div>
-            <div class="modal-body p-5 pt-0">
-              <form class="" action="/register" method="post" enctype="multipart/form-data">
-                <!-- Nom -->
-                <div class="form-floating mt-3">
-                  <input class="form-control" name="username" type="text" placeholder="JohnDoe" required>
-                  <label for="username">Nom d'utilisateur</label>
-                </div>
-                <!-- Mail -->
-                <div class="form-floating mt-3"> 
-                  <input class="form-control" name="email" type="email" placeholder = "mail@example.com" required>
-                  <label for="username">Email</label>
-                </div>
-                <!-- Mdp -->
-                <div class="form-floating mt-3">
-                  <input class="form-control rounded-4" name="password" type="password" placeholder="mdp" required>
-                  <label for="password">Mot de passe</label>
-                </div>
-                <!-- Mdp Again -->
-                <div class="form-floating mt-3">
-                    <input class="form-control" name="repassword" type="password" placeholder="mdp" required>
-                    <label for="repassword">Confirmez le mot de passe</label>
-                </div>
-                <!-- image -->
-                <div class="form-group mt-3">
-                  <label for="input-image" class="input-label-img d-flex">
-                    <input name="image" type="file" accept="image/png, image/jpg, image/gif, image/jpeg"/>
-                    <span>Image de profil </span>
-                  </label>
-                  <!-- {# <label class="" for="image">Image</label>
-                  <input class="form-control" name="image"  type="file"> #} -->
-                </div>
-                <!-- submit -->
-                <button class="w-100 mt-3 mb-3 btn btn-lg rounded-4 btn-primary" type="submit">S'inscrire</button>
-                <!-- Login -->
-                <a href="/forgotpassword" class="color-hover">Mot de passe oublié ?</a><br>
-                <a href="/login" class="color-hover">Se connecter</a>
-              </form>
-            </div>
+   <main>
+      <h1 class="d-flex justify-content-center" style=" padding-top:3%; font-weight: 700; font-size:400%;">Create an User Account : PERSO</h1>
+
+      <div class="d-flex justify-content-center">
+        <form class="" action="/inscriptionUser" method="post" >
+          <table >
+            <tr>
+                <td class ="p-2">
+                  <div class="form-floating mt-3">
+                    <input class="form-control" name="name" type="text" placeholder="name" required>
+                    <label style="color: gray;" for="name">Username</label>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-floating mt-3">
+                    <input class="form-control" name="mail" type="text" placeholder="mail" required>
+                    <label style="color: gray;" for="mail">Email</label>
+                  </div>
+                </td>
+            </tr>
+            <tr>
+                <td class ="p-2">
+                  <div class="form-floating">
+                    <input class="form-control" name="password" type="text" placeholder="password" required>
+                    <label style="color: gray;" for="password">Password</label>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-floating">
+                    <input class="form-control" name="repassword" type="text" placeholder="repassword" required>
+                    <label style="color: gray;" for="repassword">Confirm password</label>
+                  </div>
+                </td>
+            </tr>
+            <tr>
+                <td class ="p-2">
+                  <div class="form-floating mt-3">
+                    <input class="form-control" name="adress" type="text" placeholder="adress" required>
+                    <label style="color: gray;" for="adress">Adress</label>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-floating mt-3">
+                    <input class="form-control" name="city" type="text" placeholder="city" required>
+                    <label style="color: gray;" for="city">City</label>
+                  </div>
+                </td>
+            </tr>
+            <tr>
+                <td class ="p-2">
+                  <div class="form-floating">
+                    <input class="form-control" name="postcode" type="text" placeholder="postcode" required>
+                    <label style="color: gray;" for="postcode">Postcode</label>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-floating">
+                    <input class="form-control" name="country" type="text" placeholder="country" required>
+                    <label style="color: gray;" for="country">Country</label>
+                  </div>
+                </td>
+            </tr>
+            <tr>
+                <td class ="p-2">
+                  <div class="form-floating mt-3">
+                    <input class="form-control" name="sirenNumber" type="text" placeholder="sirenNumber" required>
+                    <label style="color: gray;" for="sirenNumber">n° SIREN</label>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-floating mt-3">
+                    <input class="form-control" name="kBis" type="text" placeholder="kBis" required>
+                    <label style="color: gray;" for="kBis">K-BIS</label>
+                  </div>
+                </td>
+            </tr>
+            <tr>
+                <td class ="p-2">
+                  <div class="form-floating">
+                    <input class="form-control" name="paypalAdress" type="text" placeholder="paypalAdress" required>
+                    <label style="color: gray;" for="paypalAdress">PaypalAdress</label>
+                  </div>
+                </td>
+                <td>
+                </td>
+            </tr>
+          </table>
+          {% if message is defined %}
+          <div class="d-flex justify-content-center mt-3" style="color:red">           
+            <p>{{message}}</p>
           </div>
-        </div>
+          {% endif %}
+          <div class="d-flex justify-content-center mt-3">
+            <input class="form-check-input me-2" type="checkbox" value="" aria-label="Checkbox for following text input" required>
+            <p>I have read and accept the terms of service</p>
+          </div>
+          <div class="d-flex justify-content-center">
+            <button class="btn btn-lg btn-custom" type="submit">Create account</button>
+          </div>
+        </form>
       </div>
+
     </main>
     
   </body>

@@ -16,7 +16,10 @@
   "homepage": "https://github.com/Joldd/CDA#readme",
   "main": "server.cjs",
   "scripts": {
-    "start": "nodemon -e twig server.cjs"
+    "start": "nodemon server.cjs"
+  },
+  "nodemonConfig": {
+    "ext": "cjs,twig,css,js"
   },
   "dependencies": {
     "express": "^4.18.2",

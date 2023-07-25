@@ -240,9 +240,10 @@ app.post('/inscriptionUser', (req, res) => {
   let context = {
   };
   if (req.body.password == req.body.repassword){
-    const a = new tables.Account(req.body.mail,req.body.password);
-    a.create();
-    res.redirect('/');
+    let user = new tables.Account(req.body.mail,req.body.password);
+    user.create();
+    context.user = user;
+    res.render('index.html.twig' , context);
   }
   else{
     context.message = "Passwords do not match";
