@@ -50,7 +50,7 @@ app.post('/inscriptionUser', (req, res) => {
     let user = new tables.Account(req.body.mail,req.body.password);
     user.create();
     context.user = user;
-    res.render('index.html.twig' , context);
+    res.render('accountValidated.html.twig' , context);
   }
   else{
     context.message = "Passwords do not match";
