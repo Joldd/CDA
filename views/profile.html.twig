@@ -14,7 +14,7 @@
     <h1 class="d-flex justify-content-center" style=" padding-top:5%; font-weight: 700; font-size:400%;">PROFILE</h1>
 
       <div class="d-flex justify-content-center" style=" padding-top:5%;">
-        <form class="" action="/inscriptionUser" method="post" >
+        <form class="" action="/profile" method="post" >
           <table >
             <tr>
                 <td class ="p-2">
@@ -39,7 +39,14 @@
                   </div>
                 </td>
             </tr>
-          
+            <tr>
+              <td>
+                <div class="form-group mt-3 w-100" style="float:left">
+                  <label for="image">Image</label>
+                  <input class="form-control" name="image" type="file">
+                </div>
+              </td>
+            </tr>
           {% if message is defined %}
           <div class="d-flex justify-content-center mt-3" style="color:red">           
             <p>{{message}}</p>
@@ -53,7 +60,7 @@
               </td>
               <td>
                 <div class="d-flex justify-content-center mt-3">
-                  <button id="Disconenct" class="btn btn-lg btn-danger w-100" type="submit">Disconnect</button>
+                  <button id="Disconnect" class="btn btn-lg btn-danger w-100" >Disconnect</button>
                 </div>
               </td>
             </tr>

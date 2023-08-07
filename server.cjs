@@ -23,8 +23,8 @@ const HOST = '0.0.0.0';
 ////////////////////////////////////////////////APP//////////////////////////////////////////////////////////////////////
 const app = express();
 
-app.use(express.json());       
-app.use(express.urlencoded({extended: true})); 
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 app.use(session({secret: 'Your_Secret_Key'}));
 
 app.set("twig options", {
@@ -46,7 +46,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/inscription', (req, res) => {
-  let context = { 
+  let context = {
   };
   res.render('inscription.html.twig' , context);
 });
@@ -59,9 +59,10 @@ app.post('/inscriptionUser', (req, res) => {
     user.create();
     context.userSession = user;
     req.session.user = user;
+    console.log("salut");
     res.render('accountValidated.html.twig' , context);
 
-    
+
   }
   else{
     context.message = "Passwords do not match";
@@ -94,6 +95,22 @@ app.get('/profile', (req, res) => {
     //                                                                       });
   }
   res.render('profile.html.twig' , context);
+});
+
+app.post('/profile', (req, res) => {
+  let context = {
+  };
+  console.log(req.body.mail);
+  if (req.body.mail != null){
+    console.log('salut');
+    let userSession = new tables.Account();
+    userSession.update(req.session.user.email, req.session.user.password);
+    console.log("alors : " + userSession.findByMail(userSession.email));
+  }
+
+  res.render('profile.html.twig' , context);
+
+
 });
 
 app.use('/static', express.static('static'))

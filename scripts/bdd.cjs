@@ -230,7 +230,7 @@ class Account {
               email,
               mailIsConfirmed,
               image,
-              Description,
+              description,
               societyAdress,
               siren,
               paypalAdress,
@@ -265,6 +265,27 @@ class Account {
       this.password = password;
     }
 
+    updateBDD(value, column){
+
+      con.query(
+        `UPDATE account
+        SET ? = ?,
+        WHERE id = ?;`
+        ,
+        [
+          column,
+          value,
+          this.id
+        ]
+        , 
+        function (err, result) 
+        {
+          if (err) throw err;
+          console.log("User "+ column +" maj");
+        }
+      );
+    }
+
     findById(id){
       con.query(
         `SELECT * FROM account WHERE id = ?;`
@@ -283,22 +304,23 @@ class Account {
       );
     }
 
-    findByMail(mail){
-      con.query(
-        `SELECT * FROM account WHERE email = ?;`
-        ,
-        [
-          this.email
-        ]
-        , 
-        function (err, result) 
-        {
-          if (err) throw err;
-          console.log("User trouvé");
-          console.log(result);
-          return result;
-        }
-      );
+    async findByMail(mail){
+      let result = await
+        con.query(
+          `SELECT * FROM account WHERE email = ?;`
+          ,
+          [
+            mail
+          ]
+          , 
+          function (err, result) 
+          {
+            if (err) throw err;
+            console.log("User trouvé");
+            console.log(result);
+          }
+        );
+      return result;
     }
 }
 
