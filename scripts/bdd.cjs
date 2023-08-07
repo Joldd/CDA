@@ -207,6 +207,7 @@ function createTables(){
   
 class Account {
     constructor(email, password){
+        this.id;
         this.name = "";
         this.email = email;
         this.password = password;
@@ -250,12 +251,54 @@ class Account {
               this.kbis
             ]
             , 
-            function (err, result) 
+            (function (err, result) 
             {
               if (err) throw err;
+              this.id = result.insertId;
               console.log("Account created");
-            }
+            }).bind(this)
           );
+    }
+
+    update(email, password){
+      this.email = email;
+      this.password = password;
+    }
+
+    findById(id){
+      con.query(
+        `SELECT * FROM account WHERE id = ?;`
+        ,
+        [
+          id
+        ]
+        , 
+        function (err, result) 
+        {
+          if (err) throw err;
+          console.log("User trouvé");
+          console.log(result);
+          return result;
+        }
+      );
+    }
+
+    findByMail(mail){
+      con.query(
+        `SELECT * FROM account WHERE email = ?;`
+        ,
+        [
+          this.email
+        ]
+        , 
+        function (err, result) 
+        {
+          if (err) throw err;
+          console.log("User trouvé");
+          console.log(result);
+          return result;
+        }
+      );
     }
 }
 

@@ -4,6 +4,7 @@ const tables = require("./scripts/bdd.cjs");
 const express = require('express');
 const mysql = require('mysql');
 const Twig = require("twig");
+const session = require("express-session");
 
 var con = mysql.createConnection({
   host: "cda-db",
@@ -24,6 +25,7 @@ const app = express();
 
 app.use(express.json());       
 app.use(express.urlencoded({extended: true})); 
+app.use(session({secret: 'Your_Secret_Key'}));
 
 app.set("twig options", {
   allowAsync: true, // Allow asynchronous compiling
@@ -34,6 +36,12 @@ app.get('/', (req, res) => {
   let context = {
     index : true
   };
+  if(req.session.user !=  null){
+    let userSession = new tables.Account();
+    userSession.update(req.session.user.email, req.session.user.password);
+    context.userSession = userSession;
+  }
+
   res.render('index.html.twig' , context);
 });
 
@@ -49,8 +57,11 @@ app.post('/inscriptionUser', (req, res) => {
   if (req.body.password == req.body.repassword){
     let user = new tables.Account(req.body.mail,req.body.password);
     user.create();
-    context.user = user;
+    context.userSession = user;
+    req.session.user = user;
     res.render('accountValidated.html.twig' , context);
+
+    
   }
   else{
     context.message = "Passwords do not match";
@@ -73,6 +84,15 @@ app.get('/inscriptionCreator', (req, res) => {
 app.get('/profile', (req, res) => {
   let context = {
   };
+  if(req.session.user !=  null){
+    let userSession = new tables.Account();
+    userSession.update(req.session.user.email, req.session.user.password);
+    context.userSession = userSession;
+    // document.querySelector("#Disconnect").addEventListener("click", () => {
+    //                                                                         req.session.user = null;
+    //                                                                         res.redirect('index.html.twig');
+    //                                                                       });
+  }
   res.render('profile.html.twig' , context);
 });
 

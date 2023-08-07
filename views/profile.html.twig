@@ -10,11 +10,57 @@
   
     {% include 'header.html.twig' %}
 
-    <div class="m-3">
-        <a href="/">
-            <button class ="btn btn-primary">Retour</button>
-        </a>
-    </div>
+    <main>
+    <h1 class="d-flex justify-content-center" style=" padding-top:5%; font-weight: 700; font-size:400%;">PROFILE</h1>
+
+      <div class="d-flex justify-content-center" style=" padding-top:5%;">
+        <form class="" action="/inscriptionUser" method="post" >
+          <table >
+            <tr>
+                <td class ="p-2">
+                  <div class="form-floating mt-3">
+                    <input class="form-control" name="mail" type="text" placeholder="email" >
+                    <label style="color: gray;" for="mail">{{userSession.email}}</label>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-floating mt-3">
+                    <input class="form-control" name="password" type="text" placeholder="password" >
+                    <label style="color: gray;" for="password">Password</label>
+                  </div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                  <div class="form-floating mt-1">
+                    <input class="form-control" name="repassword" type="text" placeholder="repassword" >
+                    <label style="color: gray;" for="repassword">Confirm password</label>
+                  </div>
+                </td>
+            </tr>
+          
+          {% if message is defined %}
+          <div class="d-flex justify-content-center mt-3" style="color:red">           
+            <p>{{message}}</p>
+          </div>
+          {% endif %}
+            <tr>
+              <td>
+                <div class="d-flex justify-content-center mt-3 p-3">
+                  <button class="btn btn-lg btn-custom w-100" type="submit">Modify</button>
+                </div>
+              </td>
+              <td>
+                <div class="d-flex justify-content-center mt-3">
+                  <button id="Disconenct" class="btn btn-lg btn-danger w-100" type="submit">Disconnect</button>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </form>
+      </div>
+    </main>
     
   </body>
 </html>
