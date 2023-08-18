@@ -205,6 +205,46 @@ function createTables(){
 }
 
   
+function updateAccountEmailBDD(value, id){
+
+  con.query(
+    `UPDATE account
+    SET email = ?
+    WHERE id = ?;`
+    ,
+    [
+      value,
+      id
+    ]
+    , 
+    function (err, result) 
+    {
+      if (err) throw err;
+      console.log("User email maj");
+    }
+  );
+}
+
+function updateAccountPasswordBDD(value, id){
+
+  con.query(
+    `UPDATE account
+    SET password = ?
+    WHERE id = ?;`
+    ,
+    [
+      value,
+      id
+    ]
+    , 
+    function (err, result) 
+    {
+      if (err) throw err;
+      console.log("User password maj");
+    }
+  );
+}
+
 class Account {
     constructor(email, password){
         this.id;
@@ -265,26 +305,7 @@ class Account {
       this.password = password;
     }
 
-    updateBDD(value, column){
-
-      con.query(
-        `UPDATE account
-        SET ? = ?,
-        WHERE id = ?;`
-        ,
-        [
-          column,
-          value,
-          this.id
-        ]
-        , 
-        function (err, result) 
-        {
-          if (err) throw err;
-          console.log("User "+ column +" maj");
-        }
-      );
-    }
+    
 
     findById(id){
       con.query(
@@ -324,4 +345,4 @@ class Account {
     }
 }
 
-module.exports = {Account, createTables};
+module.exports = {Account, createTables, updateAccountEmailBDD, updateAccountPasswordBDD};

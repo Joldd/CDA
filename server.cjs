@@ -100,17 +100,25 @@ app.get('/profile', (req, res) => {
 app.post('/profile', (req, res) => {
   let context = {
   };
-  console.log(req.body.mail);
-  if (req.body.mail != null){
-    console.log('salut');
-    let userSession = new tables.Account();
-    userSession.update(req.session.user.email, req.session.user.password);
-    console.log("alors : " + userSession.findByMail(userSession.email));
+  
+  if (req.body.password == req.body.repassword){
+    if (req.body.mail.length > 0){
+      tables.updateAccountEmailBDD(req.body.mail, req.session.user.id);
+    }
+    if (req.body.password.length > 0){
+      tables.updateAccountPasswordBDD(req.body.password, req.session.user.id)
+    }
+    context.message = "Your account has been updated !";
+    context.color = "green";
+    res.render('profile.html.twig' , context);
   }
-
-  res.render('profile.html.twig' , context);
-
-
+  else {
+    context.message = "Passwords do not match !";
+    context.color = "red";
+    res.render('profile.html.twig' , context);
+  }
+  
+  
 });
 
 app.use('/static', express.static('static'))
