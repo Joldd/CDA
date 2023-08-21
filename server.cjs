@@ -1,7 +1,8 @@
 'use strict';
 
 const tables = require("./src/bdd.cjs");
-const user_controller = require("./src/user_controller.cjs");
+const user_model = require("./src/user_model.cjs");
+const library_model = require("./src/library_model.cjs");
 
 const express = require('express');
 const mysql = require('mysql');
@@ -49,11 +50,17 @@ app.get('/inscription', (req, res) => {
   res.render('inscription.html.twig' , context);
 });
 
+app.get('/inscriptionUser', (req, res) => {
+  let context = {
+  };
+  res.render('inscriptionUser.html.twig' , context);
+});
+
 app.post('/inscriptionUser', (req, res) => {
   let context = {
   };
   if (req.body.password == req.body.repassword){
-    let user = new user_controller.User();
+    let user = new user_model.User();
     user.email = req.body.email;
     user.password = req.body.password;
     user.create();
@@ -65,12 +72,6 @@ app.post('/inscriptionUser', (req, res) => {
     context.message = "Passwords do not match";
     res.render('inscriptionUser.html.twig' , context);
   }
-});
-
-app.get('/inscriptionUser', (req, res) => {
-  let context = {
-  };
-  res.render('inscriptionUser.html.twig' , context);
 });
 
 app.get('/inscriptionCreator', (req, res) => {
@@ -88,7 +89,7 @@ app.get('/login', (req, res) => {
 app.post('/login', (req, res) => {
   let context = {
   };
-    user_controller.User.findByMail(req.body.email).then((user) => {
+    user_model.User.findByMail(req.body.email).then((user) => {
     if (user.password == req.body.password){
       req.session.user = user;
       context.userSession = user;
@@ -118,7 +119,7 @@ app.get('/profile', (req, res) => {
 app.post('/profile', (req, res) => {
   let context = {
   };
-  let user = user_controller.User.fromResult(req.session.user);
+  let user = user_model.User.fromResult(req.session.user);
   if (req.body.password == req.body.repassword){
     if (req.body.email.length > 0){
       user.email = req.body.email;  
@@ -145,6 +146,33 @@ app.post('/disconnect', (req, res) => {
   };
   req.session.user = null;
   res.render('index.html.twig' , context);
+});
+
+app.get('/libraries', (req, res) => {
+  let context = {
+  };
+  let user = user_model.User.fromResult(req.session.user);
+  context.userSession = user;
+  user.getLibraries().then((libraries) => {
+    context.libraries = libraries;
+    res.render('libraries.html.twig' , context);
+  })
+  .catch((err) => {
+    console.log(err);
+    res.render('libraries.html.twig' , context);
+  });
+});
+
+app.get('/newLibrary', (req, res) => {
+  let context = {
+  };
+  let user = user_model.User.fromResult(req.session.user);
+  let library = new library_model.Library();
+  library.owner_id = user.id;
+  library.create();
+  context.userSession = user;
+  req.session.user = user;
+  res.render('libraries.html.twig' , context);
 });
 
 app.use('/static', express.static('static'))

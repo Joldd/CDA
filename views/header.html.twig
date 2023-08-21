@@ -10,9 +10,10 @@
         Seccia Assets Store
     </h2>
     {% if userSession is defined %}
-    <a href="/profile">
-        <button id="profile" class="btn btn-custom m-3">Profile</button>
-    </a> 
+    <div>
+        <a href="/libraries" id="libraries" class="btn btn-custom m-3">Libraries</a>
+        <a href="/profile" id="profile" class="btn btn-custom m-3">Profile</a>
+    </div>
     {% else %}
     <div>
         <a href="/inscription" id="inscription" class="btn btn-custom m-3">Inscription</a>

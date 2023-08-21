@@ -57,6 +57,24 @@ class User {
         );
       });
     }
+
+    static findById(id){
+      return new Promise((resolve, reject) => {
+        con.query(
+          `SELECT * FROM users WHERE id = ?;`
+          ,
+          [
+            id
+          ]
+          , 
+          function (err, result) 
+          {
+            if (err || result.length <= 0) reject(err);
+            else resolve(User.fromResult(result[0]));
+          }
+        );
+      });
+    }
   
     create(){
       con.query(
@@ -91,8 +109,10 @@ class User {
         (function (err, result) 
         {
           if (err) throw err;
-          this.id = result.insertId;
-          console.log("User created");
+          else {
+            this.id = result.insertId;
+            console.log("User created");
+          }
         }).bind(this)
       );
     }
@@ -131,28 +151,29 @@ class User {
         function (err, result) 
         {
           if (err) throw err;
-          console.log("User email maj");
+          else console.log("User maj");
         }
       );
-    }
-  
-    findById(id){
-      con.query(
-        `SELECT * FROM users WHERE id = ?;`
-        ,
-        [
-          id
-        ]
-        , 
-        function (err, result) 
-        {
-          if (err) throw err;
-          console.log("User trouvé");
-          console.log(result);
-          return result;
-        }
-      )
-    }   
+    } 
+
+    getLibraries(){
+      return new Promise((resolve, reject) => { 
+        con.query(
+          `SELECT * FROM libraries
+          WHERE owner_id = ?;`
+          ,
+          [
+            this.id
+          ]
+          , 
+          function (err, result) 
+          {
+            if (err) reject(err);
+            else resolve(result);
+          }
+        );
+      });
+    } 
   }
 
   module.exports = {User};
