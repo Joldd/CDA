@@ -1,7 +1,7 @@
 'use strict';
 
-const tables = require("./scripts/bdd.cjs");
-const user_controller = require("./scripts/user_controller.cjs");
+const tables = require("./src/bdd.cjs");
+const user_controller = require("./src/user_controller.cjs");
 
 const express = require('express');
 const mysql = require('mysql');
