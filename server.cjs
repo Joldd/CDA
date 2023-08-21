@@ -3,6 +3,7 @@
 const tables = require("./src/bdd.cjs");
 const user_model = require("./src/user_model.cjs");
 const library_model = require("./src/library_model.cjs");
+const user_library_model = require("./src/user_library_model.cjs");
 
 const express = require('express');
 const mysql = require('mysql');
@@ -163,16 +164,15 @@ app.get('/libraries', (req, res) => {
   });
 });
 
-app.get('/newLibrary', (req, res) => {
-  let context = {
-  };
+app.post('/newLibrary', (req, res) => {
   let user = user_model.User.fromResult(req.session.user);
   let library = new library_model.Library();
   library.owner_id = user.id;
+  library.title = req.body.title;
+  library.price = req.body.price;
+  library.type = req.body.type;
   library.create();
-  context.userSession = user;
-  req.session.user = user;
-  res.render('libraries.html.twig' , context);
+  res.redirect('/libraries');
 });
 
 app.use('/static', express.static('static'))

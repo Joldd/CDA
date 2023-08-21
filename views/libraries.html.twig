@@ -11,32 +11,69 @@
     {% include 'header.html.twig' %}
 
     <main class>
-
+      {# Titre #}
       <h1 class="d-flex justify-content-center mt-3" style="font-weight: 700; font-size:400%;">Libraries</h1>
 
+      {# Boutton d'ajout d'une librairie #}
       <div class="d-flex justify-content-center">
-        <a href="/newLibrary" class="btn btn-success ">Add library</a>
+        <button id="newLibrary" class="btn btn-success btn-lg mt-5">Add library</a>
       </div>
 
-      <div class="d-flex justify-content-center mt-3">Your libraries</div>
+      {# Menu d'ajout d'une librarie #}
+      <div id="boxNewLibrary" class="d-none z-3 position-absolute start-50 translate-middle text-bg-light" style="border-radius: 15px">
+        <button id="closebox" class="position-absolute end-0 bi bi-x"></button>
+        <form class="" action="/newLibrary" method="post">
+          <table>
+            <tr>
+              <h3 class="p-2">New Library</h3>
+            </tr>
+            <tr>
+              <td class="p-2"> <input class="form-control" name="title" type="text" placeholder="Title" required></td>
+            </tr>
+            <tr>
+              <td class="p-2"> <input class="form-control" name="price" type="number" placeholder="Price" required></td>
+            </tr>
+            <tr>
+              <td class="p-2"> 
+                <select name="type" id="pet-select" required>
+                <option value="">--Please choose a type--</option>
+                <option value="Scene">Scene</option>
+                <option value="Character">Character</option>
+                <option value="Item">Item</option>
+                <option value="Image_and_police">Image_and_police</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td class="p-2"> <input class="form-control p-2" name="image" type="file" placeholder="image"></td>
+            </tr>
+            <tr>
+              <td class="p-2"> <button class="btn btn-lg btn-success w-100" type="submit">Add</button> </td>
+            </tr>
+          </table>
+        </form>
+      </div>
+
+      {# Tableau des librairies existantes #}
+      <h3 class="d-flex justify-content-center mt-5">Your libraries</h3>
 
       {% if libraries.length <= 0 %}
       <div class="form-floating p-1 text-center">List empty</div>
       {% else %}
       <table class="d-flex justify-content-center mt-3">
         <tr>
-          <td class="form-floating p-1 text-center">Id</td>
-          <td class="form-floating p-1 text-center">Name</td>
-          <td class="form-floating p-1 text-center">Picture</td>
-          <td class="form-floating p-1 text-center">Date</td>
-          <td class="form-floating p-1 text-center">Price</td>
-          <td class="form-floating p-1 text-center">SalesNumber</td>
+          <td class="b form-floating p-1 text-center fw-bold">Name</td>
+          <td class="form-floating p-1 text-center fw-bold">Picture</td>
+          <td class="form-floating p-1 text-center fw-bold">Type</td>
+          <td class="form-floating p-1 text-center fw-bold">Date</td>
+          <td class="form-floating p-1 text-center fw-bold">Price</td>
+          <td class="form-floating p-1 text-center fw-bold">SalesNumber</td>
         </tr>
         {% for library in libraries %}
         <tr>
-          <td class="form-floating p-1 text-center">{{library.id}}</td>
-          <td class="form-floating p-1 text-center">{{library.name}}</td>
+          <td class="form-floating p-1 text-center">{{library.title}}</td>
           <td class="form-floating p-1 text-center">{{library.image}}</td>
+          <td class="form-floating p-1 text-center">{{library.type}}</td>
           <td class="form-floating p-1 text-center">{{library.releaseDate}}</td>
           <td class="form-floating p-1 text-center">{{library.price}}</td>
           <td class="form-floating p-1 text-center">{{library.salesNumber}}</td>
@@ -50,3 +87,16 @@
   </body>
 
 </html>
+
+{# script pour les boutons d'ajout de librarie #}
+<script>
+  let btnLibrary = document.querySelector("#newLibrary");
+  let boxNewLibrary = document.querySelector("#boxNewLibrary");
+  let closebox = document.querySelector("#closebox");
+  btnLibrary.addEventListener("click", () => {
+    boxNewLibrary.classList.toggle("d-none");
+  })
+  closebox.addEventListener("click", () => {
+    boxNewLibrary.classList.toggle("d-none");
+  })
+</script>
