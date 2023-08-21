@@ -245,104 +245,99 @@ function updateAccountPasswordBDD(value, id){
   );
 }
 
-class Account {
-    constructor(email, password){
-        this.id;
-        this.name = "";
-        this.email = email;
-        this.password = password;
-        this.salt = "";
-        this.mailIsConfirmed = false;
-        this.image = "";
-        this.description = "";
-        this.societyAdress = "";
-        this.siren = null;
-        this.paypalAdress = "";
-        this.kbis = "";
+function findAccountByMail(mail){
+  return con.query(
+    `SELECT * FROM account WHERE email = ?;`
+    ,
+    [
+      mail
+    ]
+    , 
+    function (err, result) 
+    {
+      if (err) throw err;
+      console.log(result[0].email);
     }
-
-    create(){
-        con.query(
-            `INSERT INTO account(
-              name,
-              password,
-              salt,
-              email,
-              mailIsConfirmed,
-              image,
-              description,
-              societyAdress,
-              siren,
-              paypalAdress,
-              kbis)
-              VALUES(?,?,?,?,?,?,?,?,?,?,?)`
-            ,
-            [
-              this.name, 
-              this.password, 
-              this.salt, 
-              this.email, 
-              this.mailIsConfirmed, 
-              this.image, 
-              this.description, 
-              this.societyAdress, 
-              this.siren, 
-              this.paypalAdress, 
-              this.kbis
-            ]
-            , 
-            (function (err, result) 
-            {
-              if (err) throw err;
-              this.id = result.insertId;
-              console.log("Account created");
-            }).bind(this)
-          );
-    }
-
-    update(email, password){
-      this.email = email;
-      this.password = password;
-    }
-
-    
-
-    findById(id){
-      con.query(
-        `SELECT * FROM account WHERE id = ?;`
-        ,
-        [
-          id
-        ]
-        , 
-        function (err, result) 
-        {
-          if (err) throw err;
-          console.log("User trouvé");
-          console.log(result);
-          return result;
-        }
-      );
-    }
-
-    async findByMail(mail){
-      let result = await
-        con.query(
-          `SELECT * FROM account WHERE email = ?;`
-          ,
-          [
-            mail
-          ]
-          , 
-          function (err, result) 
-          {
-            if (err) throw err;
-            console.log("User trouvé");
-            console.log(result);
-          }
-        );
-      return result;
-    }
+  );
 }
 
-module.exports = {Account, createTables, updateAccountEmailBDD, updateAccountPasswordBDD};
+class Account {
+  constructor(email, password){
+    this.id;
+    this.name = "";
+    this.email = email;
+    this.password = password;
+    this.salt = "";
+    this.mailIsConfirmed = false;
+    this.image = "";
+    this.description = "";
+    this.societyAdress = "";
+    this.siren = null;
+    this.paypalAdress = "";
+    this.kbis = "";
+  }
+
+  create(){
+    con.query(
+      `INSERT INTO account(
+        name,
+        password,
+        salt,
+        email,
+        mailIsConfirmed,
+        image,
+        description,
+        societyAdress,
+        siren,
+        paypalAdress,
+        kbis)
+        VALUES(?,?,?,?,?,?,?,?,?,?,?)`
+      ,
+      [
+        this.name, 
+        this.password, 
+        this.salt, 
+        this.email, 
+        this.mailIsConfirmed, 
+        this.image, 
+        this.description, 
+        this.societyAdress, 
+        this.siren, 
+        this.paypalAdress, 
+        this.kbis
+      ]
+      , 
+      (function (err, result) 
+      {
+        if (err) throw err;
+        this.id = result.insertId;
+        console.log("Account created");
+      }).bind(this)
+    );
+  }
+
+  update(email, password){
+    this.email = email;
+    this.password = password;
+  }
+
+  findById(id){
+    con.query(
+      `SELECT * FROM account WHERE id = ?;`
+      ,
+      [
+        id
+      ]
+      , 
+      function (err, result) 
+      {
+        if (err) throw err;
+        console.log("User trouvé");
+        console.log(result);
+        return result;
+      }
+    )
+  }   
+}
+
+module.exports = {Account, findAccountByMail, createTables, updateAccountEmailBDD, updateAccountPasswordBDD};

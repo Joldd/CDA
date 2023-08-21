@@ -82,6 +82,21 @@ app.get('/inscriptionCreator', (req, res) => {
   res.render('inscriptionCreator.html.twig' , context);
 });
 
+app.get('/login', (req, res) => {
+  let context = {
+  };
+  res.render('login.html.twig' , context);
+});
+
+app.post('/login', (req, res) => {
+  let context = {
+  };
+  console.log(req.body.mail);
+  console.log(tables.findAccountByMail(req.body.mail));
+
+  res.render('index.html.twig' , context);
+});
+
 app.get('/profile', (req, res) => {
   let context = {
   };
@@ -117,8 +132,6 @@ app.post('/profile', (req, res) => {
     context.color = "red";
     res.render('profile.html.twig' , context);
   }
-  
-  
 });
 
 app.use('/static', express.static('static'))
