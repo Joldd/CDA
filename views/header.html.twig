@@ -13,13 +13,10 @@
     <a href="/profile">
         <button id="profile" class="btn btn-custom m-3">Profile</button>
     </a> 
-    {% elseif index == true %}
+    {% else %}
     <div>
         <a href="/inscription" id="inscription" class="btn btn-custom m-3">Inscription</a>
         <a href="/login" id="login" class="btn btn-custom m-3">Login</a>
-    </div>
-    {% else %}
-    <div>  
     </div>
     {% endif %}
 

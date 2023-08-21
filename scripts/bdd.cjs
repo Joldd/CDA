@@ -28,9 +28,9 @@ function createTables(){
       }
     );
     
-    //Account
+    //Users
     con.query(
-      `CREATE TABLE IF NOT EXISTS account(
+      `CREATE TABLE IF NOT EXISTS users(
         id INT NOT NULL AUTO_INCREMENT,
         name VARCHAR(255),
         password VARCHAR(255) NOT NULL,
@@ -49,7 +49,7 @@ function createTables(){
       function (err, result) 
       {
         if (err) throw err;
-        console.log("Table account created");
+        console.log("Table users created");
       }
     );
   
@@ -60,8 +60,8 @@ function createTables(){
         purchaseDate DATETIME NOT NULL,
         validity INT NOT NULL DEFAULT 63115200,
         price INT NOT NULL,
-        account_id INT NOT NULL,
-        FOREIGN KEY (account_id) REFERENCES account(id),
+        user_id INT NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES users(id),
         PRIMARY KEY (id)
       );`
       , 
@@ -79,9 +79,9 @@ function createTables(){
         acquisitionDate DATETIME NOT NULL,
         validity INT NOT NULL DEFAULT 63115200,
         percentage INT NOT NULL,
-        account_id INT NOT NULL,
+        user_id INT NOT NULL,
         PRIMARY KEY (id),
-        FOREIGN KEY (account_id) REFERENCES account(id)
+        FOREIGN KEY (user_id) REFERENCES users(id)
       );`
       , 
       function (err, result) 
@@ -106,7 +106,7 @@ function createTables(){
         encouragementsNumber INT NOT NULL,
         owner_id INT NOT NULL,
         PRIMARY KEY (id),
-        FOREIGN KEY (owner_id) REFERENCES account(id)
+        FOREIGN KEY (owner_id) REFERENCES users(id)
       );`
       , 
       function (err, result) 
@@ -152,12 +152,12 @@ function createTables(){
     con.query(
       `CREATE TABLE IF NOT EXISTS users_libraries(
         id INT NOT NULL AUTO_INCREMENT,
-        account_id INT NOT NULL,
+        user_id INT NOT NULL,
         library_id INT NULL,
         purchaseDate DATETIME NOT NULL,
         PRIMARY KEY (id),
         FOREIGN KEY (library_id) REFERENCES libraries(id),
-        FOREIGN KEY (account_id) REFERENCES account(id)
+        FOREIGN KEY (user_id) REFERENCES users(id)
       );`
       , 
       function (err, result) 
@@ -204,152 +204,4 @@ function createTables(){
   });
 }
 
-class Account {
-  constructor(){
-    this.id;
-    this.name = "";
-    this.email = "";
-    this.password = "";
-    this.salt = "";
-    this.mailIsConfirmed = false;
-    this.image = "";
-    this.description = "";
-    this.societyAdress = "";
-    this.siren = null;
-    this.paypalAdress = "";
-    this.kbis = "";
-  }
-
-  static fromResult(result){
-    let account = new Account();
-    account.id = result.id;
-    account.name = result.name;
-    account.email = result.email;
-    account.password = result.password;
-    account.salt = result.salt;
-    account.mailIsConfirmed = result.mailIsConfirmed;
-    account.image = result.image;
-    account.description = result.description;
-    account.societyAdress = result.societyAdress;
-    account.siren = result.siren;
-    account.paypalAdress = result.paypalAdress;
-    account.kbis = result.kbis;
-    return account;
-  }
-
-  static findAccountByMail(email){
-    return new Promise((resolve, reject) => {
-      con.query(
-        `SELECT * FROM account WHERE email = ?;`
-        ,
-        [
-          email
-        ]
-        , 
-        function (err, result) 
-        {
-          if (err || result.length <= 0) reject(err);
-          resolve(Account.fromResult(result[0]));
-        }
-      );
-    });
-  }
-
-  create(){
-    con.query(
-      `INSERT INTO account(
-        name,
-        password,
-        salt,
-        email,
-        mailIsConfirmed,
-        image,
-        description,
-        societyAdress,
-        siren,
-        paypalAdress,
-        kbis)
-        VALUES(?,?,?,?,?,?,?,?,?,?,?)`
-      ,
-      [
-        this.name, 
-        this.password, 
-        this.salt, 
-        this.email, 
-        this.mailIsConfirmed, 
-        this.image, 
-        this.description, 
-        this.societyAdress, 
-        this.siren, 
-        this.paypalAdress, 
-        this.kbis
-      ]
-      , 
-      (function (err, result) 
-      {
-        if (err) throw err;
-        this.id = result.insertId;
-        console.log("Account created");
-      }).bind(this)
-    );
-  }
-
-  update(){
-    con.query(
-      `UPDATE account
-      SET name = ?,
-      email = ?,
-      password = ?,
-      salt = ?,
-      mailIsConfirmed = ?,
-      image = ?,
-      description = ?,
-      societyAdress = ?,
-      siren = ?,
-      paypalAdress = ?,
-      kbis = ?
-      WHERE id = ?;`
-      ,
-      [
-        this.name,
-        this.email,
-        this.password,
-        this.salt,
-        this.mailIsConfirmed,
-        this.image,
-        this.description,
-        this.societyAdress,
-        this.siren,
-        this.paypalAdress,
-        this.kbis,
-        this.id
-      ]
-      , 
-      function (err, result) 
-      {
-        if (err) throw err;
-        console.log("User email maj");
-      }
-    );
-  }
-
-  findById(id){
-    con.query(
-      `SELECT * FROM account WHERE id = ?;`
-      ,
-      [
-        id
-      ]
-      , 
-      function (err, result) 
-      {
-        if (err) throw err;
-        console.log("User trouvé");
-        console.log(result);
-        return result;
-      }
-    )
-  }   
-}
-
-module.exports = {Account, createTables};
+module.exports = {createTables};

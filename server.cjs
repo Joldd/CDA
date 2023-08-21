@@ -1,6 +1,8 @@
 'use strict';
 
 const tables = require("./scripts/bdd.cjs");
+const user_controller = require("./scripts/user_controller.cjs");
+
 const express = require('express');
 const mysql = require('mysql');
 const Twig = require("twig");
@@ -34,7 +36,6 @@ app.set("twig options", {
 
 app.get('/', (req, res) => {
   let context = {
-    index : true
   };
   if(req.session.user !=  null){
     context.userSession = req.session.user;
@@ -52,7 +53,7 @@ app.post('/inscriptionUser', (req, res) => {
   let context = {
   };
   if (req.body.password == req.body.repassword){
-    let user = new tables.Account();
+    let user = new user_controller.User();
     user.email = req.body.email;
     user.password = req.body.password;
     user.create();
@@ -87,11 +88,20 @@ app.get('/login', (req, res) => {
 app.post('/login', (req, res) => {
   let context = {
   };
-    tables.Account.findAccountByMail(req.body.email).then((account) => {
-    res.render('index.html.twig' , context);
+    user_controller.User.findByMail(req.body.email).then((user) => {
+    if (user.password == req.body.password){
+      req.session.user = user;
+      context.userSession = user;
+      res.render('index.html.twig' , context);
+    }
+    else{
+      context.message = "Wrong password";
+      res.render("login.html.twig" , context);
+    }
   })
   .catch((err) => {
-    context.message = "Account doesn't exist";
+    console.log(err);
+    context.message = "This email doesn't exist";
     res.render("login.html.twig" , context);
   });
 });
@@ -108,7 +118,7 @@ app.get('/profile', (req, res) => {
 app.post('/profile', (req, res) => {
   let context = {
   };
-  let user = tables.Account.fromResult(req.session.user);
+  let user = user_controller.User.fromResult(req.session.user);
   if (req.body.password == req.body.repassword){
     if (req.body.email.length > 0){
       user.email = req.body.email;  
@@ -118,7 +128,8 @@ app.post('/profile', (req, res) => {
     }
     user.update();
     req.session.user = user;
-    context.message = "Your account has been updated !";
+    context.userSession = user;
+    context.message = "Your profile has been updated !";
     context.color = "green";
     res.render('profile.html.twig' , context);
   }
@@ -127,6 +138,13 @@ app.post('/profile', (req, res) => {
     context.color = "red";
     res.render('profile.html.twig' , context);
   }
+});
+
+app.post('/disconnect', (req, res) => {
+  let context = {
+  };
+  req.session.user = null;
+  res.render('index.html.twig' , context);
 });
 
 app.use('/static', express.static('static'))
