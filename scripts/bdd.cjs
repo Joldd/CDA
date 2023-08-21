@@ -204,69 +204,12 @@ function createTables(){
   });
 }
 
-  
-function updateAccountEmailBDD(value, id){
-
-  con.query(
-    `UPDATE account
-    SET email = ?
-    WHERE id = ?;`
-    ,
-    [
-      value,
-      id
-    ]
-    , 
-    function (err, result) 
-    {
-      if (err) throw err;
-      console.log("User email maj");
-    }
-  );
-}
-
-function updateAccountPasswordBDD(value, id){
-
-  con.query(
-    `UPDATE account
-    SET password = ?
-    WHERE id = ?;`
-    ,
-    [
-      value,
-      id
-    ]
-    , 
-    function (err, result) 
-    {
-      if (err) throw err;
-      console.log("User password maj");
-    }
-  );
-}
-
-function findAccountByMail(mail){
-  return con.query(
-    `SELECT * FROM account WHERE email = ?;`
-    ,
-    [
-      mail
-    ]
-    , 
-    function (err, result) 
-    {
-      if (err) throw err;
-      console.log(result[0].email);
-    }
-  );
-}
-
 class Account {
-  constructor(email, password){
+  constructor(){
     this.id;
     this.name = "";
-    this.email = email;
-    this.password = password;
+    this.email = "";
+    this.password = "";
     this.salt = "";
     this.mailIsConfirmed = false;
     this.image = "";
@@ -275,6 +218,41 @@ class Account {
     this.siren = null;
     this.paypalAdress = "";
     this.kbis = "";
+  }
+
+  static fromResult(result){
+    let account = new Account();
+    account.id = result.id;
+    account.name = result.name;
+    account.email = result.email;
+    account.password = result.password;
+    account.salt = result.salt;
+    account.mailIsConfirmed = result.mailIsConfirmed;
+    account.image = result.image;
+    account.description = result.description;
+    account.societyAdress = result.societyAdress;
+    account.siren = result.siren;
+    account.paypalAdress = result.paypalAdress;
+    account.kbis = result.kbis;
+    return account;
+  }
+
+  static findAccountByMail(email){
+    return new Promise((resolve, reject) => {
+      con.query(
+        `SELECT * FROM account WHERE email = ?;`
+        ,
+        [
+          email
+        ]
+        , 
+        function (err, result) 
+        {
+          if (err || result.length <= 0) reject(err);
+          resolve(Account.fromResult(result[0]));
+        }
+      );
+    });
   }
 
   create(){
@@ -316,9 +294,43 @@ class Account {
     );
   }
 
-  update(email, password){
-    this.email = email;
-    this.password = password;
+  update(){
+    con.query(
+      `UPDATE account
+      SET name = ?,
+      email = ?,
+      password = ?,
+      salt = ?,
+      mailIsConfirmed = ?,
+      image = ?,
+      description = ?,
+      societyAdress = ?,
+      siren = ?,
+      paypalAdress = ?,
+      kbis = ?
+      WHERE id = ?;`
+      ,
+      [
+        this.name,
+        this.email,
+        this.password,
+        this.salt,
+        this.mailIsConfirmed,
+        this.image,
+        this.description,
+        this.societyAdress,
+        this.siren,
+        this.paypalAdress,
+        this.kbis,
+        this.id
+      ]
+      , 
+      function (err, result) 
+      {
+        if (err) throw err;
+        console.log("User email maj");
+      }
+    );
   }
 
   findById(id){
@@ -340,4 +352,4 @@ class Account {
   }   
 }
 
-module.exports = {Account, findAccountByMail, createTables, updateAccountEmailBDD, updateAccountPasswordBDD};
+module.exports = {Account, createTables};

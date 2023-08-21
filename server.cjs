@@ -37,11 +37,8 @@ app.get('/', (req, res) => {
     index : true
   };
   if(req.session.user !=  null){
-    let userSession = new tables.Account();
-    userSession.update(req.session.user.email, req.session.user.password);
-    context.userSession = userSession;
+    context.userSession = req.session.user;
   }
-
   res.render('index.html.twig' , context);
 });
 
@@ -55,14 +52,13 @@ app.post('/inscriptionUser', (req, res) => {
   let context = {
   };
   if (req.body.password == req.body.repassword){
-    let user = new tables.Account(req.body.mail,req.body.password);
+    let user = new tables.Account();
+    user.email = req.body.email;
+    user.password = req.body.password;
     user.create();
     context.userSession = user;
     req.session.user = user;
-    console.log("salut");
     res.render('accountValidated.html.twig' , context);
-
-
   }
   else{
     context.message = "Passwords do not match";
@@ -91,38 +87,37 @@ app.get('/login', (req, res) => {
 app.post('/login', (req, res) => {
   let context = {
   };
-  console.log(req.body.mail);
-  console.log(tables.findAccountByMail(req.body.mail));
-
-  res.render('index.html.twig' , context);
+    tables.Account.findAccountByMail(req.body.email).then((account) => {
+    res.render('index.html.twig' , context);
+  })
+  .catch((err) => {
+    context.message = "Account doesn't exist";
+    res.render("login.html.twig" , context);
+  });
 });
 
 app.get('/profile', (req, res) => {
   let context = {
   };
   if(req.session.user !=  null){
-    let userSession = new tables.Account();
-    userSession.update(req.session.user.email, req.session.user.password);
-    context.userSession = userSession;
-    // document.querySelector("#Disconnect").addEventListener("click", () => {
-    //                                                                         req.session.user = null;
-    //                                                                         res.redirect('index.html.twig');
-    //                                                                       });
-  }
+    context.userSession = req.session.user;                                                                   
+  };
   res.render('profile.html.twig' , context);
 });
 
 app.post('/profile', (req, res) => {
   let context = {
   };
-  
+  let user = tables.Account.fromResult(req.session.user);
   if (req.body.password == req.body.repassword){
-    if (req.body.mail.length > 0){
-      tables.updateAccountEmailBDD(req.body.mail, req.session.user.id);
+    if (req.body.email.length > 0){
+      user.email = req.body.email;  
     }
     if (req.body.password.length > 0){
-      tables.updateAccountPasswordBDD(req.body.password, req.session.user.id)
+      user.password = req.body.password;
     }
+    user.update();
+    req.session.user = user;
     context.message = "Your account has been updated !";
     context.color = "green";
     res.render('profile.html.twig' , context);
