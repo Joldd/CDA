@@ -91,7 +91,7 @@ function createTables(){
       }
     );
   
-    //Librairies
+    //Libraries
     con.query(
       `CREATE TABLE IF NOT EXISTS libraries(
         id INT NOT NULL AUTO_INCREMENT,
@@ -113,7 +113,7 @@ function createTables(){
       function (err, result) 
       {
         if (err) throw err;
-        console.log("Table librairies created");
+        console.log("Table libraries created");
       }
     );
   
@@ -133,7 +133,7 @@ function createTables(){
       }
     );
   
-    //Librairies_Tags
+    //Libraries_Tags
     con.query(
       `CREATE TABLE IF NOT EXISTS libraries_tags(
         library_id INT NOT NULL,
@@ -149,7 +149,7 @@ function createTables(){
       }
     );
   
-    //User_Librairies
+    //User_Libraries
     con.query(
       `CREATE TABLE IF NOT EXISTS users_libraries(
         id INT NOT NULL AUTO_INCREMENT,
@@ -164,7 +164,7 @@ function createTables(){
       function (err, result) 
       {
         if (err) throw err;
-        console.log("Table User_Librairies created");
+        console.log("Table User_Libraries created");
       }
     );
   

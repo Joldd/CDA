@@ -22,6 +22,20 @@ class Library {
       this.encouragementsNumber = 0;
       this.owner_id;
     }
+
+    static getAll(){
+      return new Promise((resolve, reject) => {
+        con.query(
+          `SELECT * FROM libraries;`
+          , 
+          function (err, result) 
+          {
+            if (err || result.length <= 0) reject(err);
+            else resolve(result);
+          }
+        );
+      });
+    }
   
     static fromResult(result){
       let library = new Library();

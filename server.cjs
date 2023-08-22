@@ -49,6 +49,8 @@ app.get('/', (req, res) => {
   res.render('index.html.twig' , context);
 });
 
+//////////////////////////////////////////////// USER //////////////////////////////////////////////////////////////////////
+
 app.get('/inscription', (req, res) => {
   let context = {
   };
@@ -153,6 +155,8 @@ app.post('/disconnect', (req, res) => {
   res.render('index.html.twig' , context);
 });
 
+//////////////////////////////////////////////// LIBRARY //////////////////////////////////////////////////////////////////////
+
 app.get('/libraries', (req, res) => {
   let context = {
   };
@@ -199,6 +203,27 @@ app.post('/newLibrary', (req, res) => {
   library.create();
   res.redirect('/libraries');
 });
+
+app.get('/store', (req, res) => {
+  let context = {
+  };
+  if (req.session.user){
+    let user = user_model.User.fromResult(req.session.user);
+    context.userSession = user;
+  }
+  library_model.Library.getAll().then((libraries) => {
+    context.libraries = libraries;
+    res.render("store.html.twig" , context);
+  })
+  .catch((err) => {
+    console.log(err);
+    context.message = "No libraries";
+    res.render("store.html.twig" , context);
+  });
+  
+});
+
+//////////////////////////////////////////////// AUTRES //////////////////////////////////////////////////////////////////////
 
 app.get('/media/:type/:uuid', function (req, res) {
   let type = req.params.type;
