@@ -11,6 +11,7 @@ class Library {
     constructor(){
       this.id;
       this.title = "";
+      this.uuid = "";
       this.image = "";
       this.description = "";
       this.type = 'Scene';
@@ -25,6 +26,7 @@ class Library {
     static fromResult(result){
       let library = new Library();
       library.id = result.id;
+      library.uuid = result.uuid;
       library.title = result.title;
       library.image = result.image;
       library.description = result.description;
@@ -60,6 +62,7 @@ class Library {
       con.query(
         `INSERT INTO libraries(
           title,
+          uuid,
           image,
           description,
           type,
@@ -69,10 +72,11 @@ class Library {
           salesNumber,
           encouragementsNumber,
           owner_id)
-          VALUES(?,?,?,?,?,?,?,?,?,?)`
+          VALUES(?,?,?,?,?,?,?,?,?,?,?)`
         ,
         [
           this.title,
+          this.uuid,
           this.image,
           this.description,
           this.type,
@@ -97,6 +101,7 @@ class Library {
       con.query(
         `UPDATE libraries
         SET title = ?,
+        uuid = ?,
         image = ?,
         description = ?,
         type = ?,
@@ -110,6 +115,7 @@ class Library {
         ,
         [
           this.title,
+          this.uuid,
           this.image,
           this.description,
           this.type,

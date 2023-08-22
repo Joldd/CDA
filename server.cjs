@@ -9,6 +9,9 @@ const express = require('express');
 const mysql = require('mysql');
 const Twig = require("twig");
 const session = require("express-session");
+const fileUpload = require('express-fileupload');
+const { v4: uuidv4 } = require('uuid');
+const fs = require('fs');
 
 var con = mysql.createConnection({
   host: "cda-db",
@@ -29,7 +32,8 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-app.use(session({secret: 'Your_Secret_Key'}));
+app.use(session({secret: 'GtechCDA'}));
+app.use(fileUpload());
 
 app.set("twig options", {
   allowAsync: true, // Allow asynchronous compiling
@@ -54,7 +58,7 @@ app.get('/inscription', (req, res) => {
 app.get('/inscriptionUser', (req, res) => {
   let context = {
   };
-  res.render('inscriptionUser.html.twig' , context);
+  res.render('forms/inscriptionUser.html.twig' , context);
 });
 
 app.post('/inscriptionUser', (req, res) => {
@@ -71,20 +75,20 @@ app.post('/inscriptionUser', (req, res) => {
   }
   else{
     context.message = "Passwords do not match";
-    res.render('inscriptionUser.html.twig' , context);
+    res.render('forms/inscriptionUser.html.twig' , context);
   }
 });
 
 app.get('/inscriptionCreator', (req, res) => {
   let context = {
   };
-  res.render('inscriptionCreator.html.twig' , context);
+  res.render('forms/inscriptionCreator.html.twig' , context);
 });
 
 app.get('/login', (req, res) => {
   let context = {
   };
-  res.render('login.html.twig' , context);
+  res.render('forms/login.html.twig' , context);
 });
 
 app.post('/login', (req, res) => {
@@ -98,13 +102,13 @@ app.post('/login', (req, res) => {
     }
     else{
       context.message = "Wrong password";
-      res.render("login.html.twig" , context);
+      res.render("forms/login.html.twig" , context);
     }
   })
   .catch((err) => {
     console.log(err);
     context.message = "This email doesn't exist";
-    res.render("login.html.twig" , context);
+    res.render("forms/login.html.twig" , context);
   });
 });
 
@@ -114,7 +118,7 @@ app.get('/profile', (req, res) => {
   if(req.session.user !=  null){
     context.userSession = req.session.user;                                                                   
   };
-  res.render('profile.html.twig' , context);
+  res.render('forms/profile.html.twig' , context);
 });
 
 app.post('/profile', (req, res) => {
@@ -133,12 +137,12 @@ app.post('/profile', (req, res) => {
     context.userSession = user;
     context.message = "Your profile has been updated !";
     context.color = "green";
-    res.render('profile.html.twig' , context);
+    res.render('forms/profile.html.twig' , context);
   }
   else {
     context.message = "Passwords do not match !";
     context.color = "red";
-    res.render('profile.html.twig' , context);
+    res.render('forms/profile.html.twig' , context);
   }
 });
 
@@ -156,11 +160,11 @@ app.get('/libraries', (req, res) => {
   context.userSession = user;
   user.getLibraries().then((libraries) => {
     context.libraries = libraries;
-    res.render('libraries.html.twig' , context);
+    res.render('forms/libraries.html.twig' , context);
   })
   .catch((err) => {
     console.log(err);
-    res.render('libraries.html.twig' , context);
+    res.render('forms/libraries.html.twig' , context);
   });
 });
 
@@ -171,8 +175,41 @@ app.post('/newLibrary', (req, res) => {
   library.title = req.body.title;
   library.price = req.body.price;
   library.type = req.body.type;
+
+  let uploadedLibrary = req.files.library;
+  library.uuid  = uuidv4();
+  let uploadLibraryPath = "media/libraries/"+library.uuid+".lib";
+  uploadedLibrary.mv(uploadLibraryPath, function (err) {
+    if (err) {
+      console.log(err);
+      console.log("Failed !!");
+    } else console.log("Successfully Uploaded !!");
+  });
+
+  let uploadedImage = req.files.image;
+  library.image  = uuidv4();
+  let uploadImagePath = "media/img/"+library.image+".png";
+  uploadedImage.mv(uploadImagePath, function (err) {
+    if (err) {
+      console.log(err);
+      console.log("Failed !!");
+    } else console.log("Successfully Uploaded !!");
+  });
+
   library.create();
   res.redirect('/libraries');
+});
+
+app.get('/media/:type/:uuid', function (req, res) {
+  let type = req.params.type;
+  let uuid = req.params.uuid;
+  let path = __dirname + "/media/" + type + "/" + uuid;
+  if (fs.existsSync(path)){
+    res.sendFile(path);
+  }
+  else {
+    res.render('404.html.twig');
+  }
 });
 
 app.use('/static', express.static('static'))

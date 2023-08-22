@@ -96,6 +96,7 @@ function createTables(){
       `CREATE TABLE IF NOT EXISTS libraries(
         id INT NOT NULL AUTO_INCREMENT,
         title VARCHAR(255) NOT NULL,
+        uuid VARCHAR(255) NOT NULL,
         image VARCHAR(255) NOT NULL,
         description TEXT NOT NULL DEFAULT '',
         type ENUM('Scene','Character','Item','Image_and_police'),

@@ -131,3 +131,7 @@ dist
 
 # BDD
 data-db/
+
+# Media
+media/img
+media/libraries

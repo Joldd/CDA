@@ -22,7 +22,7 @@
       {# Menu d'ajout d'une librarie #}
       <div id="boxNewLibrary" class="d-none z-3 position-absolute start-50 translate-middle text-bg-light" style="border-radius: 15px">
         <button id="closebox" class="position-absolute end-0 bi bi-x"></button>
-        <form class="" action="/newLibrary" method="post">
+        <form class="" action="/newLibrary" method="post" enctype="multipart/form-data">
           <table>
             <tr>
               <h3 class="p-2">New Library</h3>
@@ -32,6 +32,12 @@
             </tr>
             <tr>
               <td class="p-2"> <input class="form-control" name="price" type="number" placeholder="Price" required></td>
+            </tr>
+            <tr>
+              <td class="p-2"> 
+              <label style="color: gray;" for="library">file.lib</label>
+              <input class="form-control p-2" name="library" type="file" placeholder="library">
+              </td>
             </tr>
             <tr>
               <td class="p-2"> 
@@ -45,7 +51,10 @@
               </td>
             </tr>
             <tr>
-              <td class="p-2"> <input class="form-control p-2" name="image" type="file" placeholder="image"></td>
+              <td class="p-2"> 
+              <label style="color: gray;" for="image">Image</label>
+              <input class="form-control p-2" name="image" type="file" placeholder="image">
+              </td>
             </tr>
             <tr>
               <td class="p-2"> <button class="btn btn-lg btn-success w-100" type="submit">Add</button> </td>
@@ -72,7 +81,7 @@
         {% for library in libraries %}
         <tr>
           <td class="form-floating p-1 text-center">{{library.title}}</td>
-          <td class="form-floating p-1 text-center">{{library.image}}</td>
+          <td class="form-floating p-1 text-center"><img src="/media/img/{{library.image}}.png" alt="" height="100"></td>
           <td class="form-floating p-1 text-center">{{library.type}}</td>
           <td class="form-floating p-1 text-center">{{library.releaseDate}}</td>
           <td class="form-floating p-1 text-center">{{library.price}}</td>
