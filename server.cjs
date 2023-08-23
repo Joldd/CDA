@@ -160,16 +160,22 @@ app.post('/disconnect', (req, res) => {
 app.get('/libraries', (req, res) => {
   let context = {
   };
-  let user = user_model.User.fromResult(req.session.user);
-  context.userSession = user;
-  user.getLibraries().then((libraries) => {
-    context.libraries = libraries;
-    res.render('forms/libraries.html.twig' , context);
-  })
-  .catch((err) => {
-    console.log(err);
-    res.render('forms/libraries.html.twig' , context);
-  });
+  if (req.session.user != null){
+    let user = user_model.User.fromResult(req.session.user);
+    context.userSession = user;
+    user.getLibraries().then((libraries) => {
+      context.libraries = libraries;
+      res.render('forms/libraries.html.twig' , context);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.render('forms/libraries.html.twig' , context);
+    });
+  }
+  else {
+    res.render('404.html.twig' , context);
+  }
+  
 });
 
 app.post('/newLibrary', (req, res) => {

@@ -17,7 +17,7 @@ class Library {
       this.type = 'Scene';
       this.price = 0;
       this.state = 'validating';
-      this.releaseDate = 0;
+      this.releaseDate;
       this.salesNumber = 0;
       this.encouragementsNumber = 0;
       this.owner_id;
@@ -118,11 +118,10 @@ class Library {
           type,
           price,
           state,
-          releaseDate,
           salesNumber,
           encouragementsNumber,
           owner_id)
-          VALUES(?,?,?,?,?,?,?,?,?,?,?)`
+          VALUES(?,?,?,?,?,?,?,?,?,?)`
         ,
         [
           this.title,
@@ -132,7 +131,6 @@ class Library {
           this.type,
           this.price,
           this.state,
-          this.releaseDate,
           this.salesNumber,
           this.encouragementsNumber,
           this.owner_id

@@ -71,22 +71,24 @@
       {% else %}
       <table class="d-flex justify-content-center mt-3">
         <tr>
-          <td class="b form-floating p-1 text-center fw-bold">Name</td>
-          <td class="form-floating p-1 text-center fw-bold">Picture</td>
-          <td class="form-floating p-1 text-center fw-bold">Type</td>
-          <td class="form-floating p-1 text-center fw-bold">Date</td>
-          <td class="form-floating p-1 text-center fw-bold">Price</td>
-          <td class="form-floating p-1 text-center fw-bold">SalesNumber</td>
+          <td class="b form-floating p-3 text-center fw-bold">Name</td>
+          <td class="form-floating p-3 text-center fw-bold">Picture</td>
+          <td class="form-floating p-3 text-center fw-bold">Type</td>
+          <td class="form-floating p-3 text-center fw-bold">Date</td>
+          <td class="form-floating p-3 text-center fw-bold">Price</td>
+          <td class="form-floating p-3 text-center fw-bold">Sales Number</td>
+          <td class="form-floating p-3 text-center fw-bold">Encouragements Number</td>
         </tr>
-        {% for library in libraries %}
-        <tr>
-          <td class="form-floating p-1 text-center">{{library.title}}</td>
-          <td class="form-floating p-1 text-center"><img src="/media/img/{{library.image}}.png" alt="" height="100"></td>
-          <td class="form-floating p-1 text-center">{{library.type}}</td>
-          <td class="form-floating p-1 text-center">{{library.releaseDate}}</td>
-          <td class="form-floating p-1 text-center">{{library.price}}</td>
-          <td class="form-floating p-1 text-center">{{library.salesNumber}}</td>
-        </tr>
+        {% for library in libraries %}       
+          <tr onclick="document.location='/library/{{library.uuid}}'" class="gridLine">
+            <td class="form-floating p-3 text-center">{{library.title}}</td>
+            <td class="form-floating p-3 text-center"><img src="/media/img/{{library.image}}.png" alt="" height="100"></td>
+            <td class="form-floating p-3 text-center">{{library.type}}</td>
+            <td class="form-floating p-3 text-center">{{library.releaseDate.getMonth()}} / {{library.releaseDate.getDate()}} / {{library.releaseDate.getFullYear()}}</td>
+            <td class="form-floating p-3 text-center">{{library.price}} €</td>
+            <td class="form-floating p-3 text-center">{{library.salesNumber}}</td>
+            <td class="form-floating p-3 text-center">{{library.encouragementsNumber}}</td>
+          </tr>
         {% endfor %}
         {% endif %}
       </table>
@@ -108,4 +110,8 @@
   closebox.addEventListener("click", () => {
     boxNewLibrary.classList.toggle("d-none");
   })
+
+  function test(){
+    return "abc";
+  }
 </script>

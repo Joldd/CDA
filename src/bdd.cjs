@@ -11,7 +11,7 @@ function createTables(){
   con.connect(function(err) {
     if (err) throw err;
     console.log("Connected to bdd cda-db!");
-  
+    
     //Prices
     con.query(
       `CREATE TABLE IF NOT EXISTS prices(
@@ -102,7 +102,7 @@ function createTables(){
         type ENUM('Scene','Character','Item','Image_and_police'),
         price INT NOT NULL,
         state ENUM('accepted','validating','rejected'),
-        releaseDate DATETIME NOT NULL,
+        releaseDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
         salesNumber INT NOT NULL,
         encouragementsNumber INT NOT NULL,
         owner_id INT NOT NULL,
@@ -202,6 +202,19 @@ function createTables(){
         console.log("Table approvement created");
       }
     );
+
+    //ATTENTION => RESET
+    // con.query(
+    //   `DROP TABLE approvement, receipts, users_libraries, libraries_tags, libraries
+    //   );`
+    //   , 
+    //   function (err, result) 
+    //   {
+    //     if (err) throw err;
+    //     console.log("Table prices created");
+    //   }
+    // );
+
   });
 }
 
