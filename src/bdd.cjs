@@ -57,7 +57,7 @@ function createTables(){
     con.query(
       `CREATE TABLE IF NOT EXISTS credits(
         id INT NOT NULL AUTO_INCREMENT,
-        purchaseDate DATETIME NOT NULL,
+        purchaseDate DATETIME NOT NULL NOT NULL DEFAULT CURRENT_TIMESTAMP,
         validity INT NOT NULL DEFAULT 63115200,
         price INT NOT NULL,
         user_id INT NOT NULL,

@@ -3,6 +3,7 @@
 const tables = require("./src/bdd.cjs");
 const user_model = require("./src/user_model.cjs");
 const library_model = require("./src/library_model.cjs");
+const credit_model = require("./src/credit_model.cjs");
 const user_library_model = require("./src/user_library_model.cjs");
 
 const express = require('express');
@@ -298,7 +299,7 @@ app.post('/library/:uuid/modify', (req, res) => {
         library.price = req.body.price;
         library.description = req.body.description;
         library.update();
-        context.message = "Your library has been updated !"
+        context.message = "Your library has been updated !";
         res.render("libraries/one.html.twig", context);
       }
       else {
@@ -332,6 +333,31 @@ app.get('/library/:uuid/delete', (req, res) => {
       res.render("404.html.twig", context);
     }
   });  
+});
+//////////////////////////////////////////////// CREDITS //////////////////////////////////////////////////////////////////////
+
+app.get('/credits', (req, res) => {
+  let context = {
+  };
+  if (req.session.user){
+    let user = user_model.User.fromResult(req.session.user);
+    context.userSession = user;
+    user.getLibraries().then((libraries) => {
+      context.libraries = libraries;
+      let credit = new credit_model.Credit();
+      credit.user_id = user.id;
+      credit.create();
+      // credit_model.createMultiple(100, user.id);
+      res.render('forms/libraries.html.twig' , context);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.render('forms/libraries.html.twig' , context);
+    });
+  }
+  else {
+    res.render("404.html.twig", context);
+  }
 });
 
 //////////////////////////////////////////////// AUTRES //////////////////////////////////////////////////////////////////////
