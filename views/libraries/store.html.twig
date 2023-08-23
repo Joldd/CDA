@@ -20,28 +20,33 @@
           <button class="btn btn-custom bi bi-search"></button>
           <input type="text" name="search" id="search" placeholder="Search libraries">
         </div>
-        <button class="btn btn-custom ms-3 bi bi-card-image" id="Scene"></button>
-        <button class="btn btn-custom ms-3 bi bi-emoji-smile" id="Character"></button>
-        <button class="btn btn-custom ms-3 bi bi-dice-5" id="Item"></button>
-        <button class="btn btn-custom ms-3 bi bi-palette" id="Image and Police"></button>
+        <a href="/store/Scene" class="btn btn-custom ms-3 bi bi-card-image" id="Scene" title="Scene"></a>
+        <a href="/store/Character" class="btn btn-custom ms-3 bi bi-emoji-smile" id="Character" title="Character"></a>
+        <a href="/store/Item" class="btn btn-custom ms-3 bi bi-dice-5" id="Item" title="Item"></a>
+        <a href="/store/Image_And_Police" class="btn btn-custom ms-3 bi bi-palette" id="Image and Police" title="Image and Police"></a>
       </div>
 
       {# Libraries #}
-      <div class="container">
+      {% if libraries is defined %}
+      <div class="container mt-3">
         <div class="row">
           {% for library in libraries %}
           <div class="col-6 col-lg-3 p-1">
-            <div class="card" style="">
-              <a href="" class="overflow-hidden" title="Open library">
-                <img class="card-img-top zoom-hover" src="/media/img/{{library.image}}.png" alt="project_image" style="aspect-ratio: 1.2; object-fit: cover;">
+            <div class="card" style="background-color:#A0A0A0">
+              <a href="/library/{{library.uuid}}" class="overflow-hidden" title="Open library">
+                <img class="p-3 card-img-top zoom-hover" src="/media/img/{{library.image}}.png" alt="project_image" style="aspect-ratio: 1.2; object-fit: cover;">
               </a>
-              <div class="card-body" style="height: 6.2rem; overflow:hidden;" title={{library.title}}>
+              <div class="text-center card-body" style="height: 6.2rem; overflow:hidden;" title={{library.title}}>
                 <h5 class="card-title">{{library.title}}</h5>
+                <p class="card-text">Price : {{library.price}} €</p>
                 <p class="card-text">{{library.description}}</p>
               </div>
             </div>
           </div>
           {% endfor %}
+        {% else %}
+        <h2 class="text-center mt-3">No results</h2> 
+        {% endif %}
         </div>
       </div>
      

@@ -71,6 +71,42 @@ class Library {
         );
       });
     }
+
+    static findByUuid(uuid){
+      return new Promise((resolve, reject) => {
+        con.query(
+          `SELECT * FROM libraries WHERE uuid = ?;`
+          ,
+          [
+            uuid
+          ]
+          , 
+          function (err, result) 
+          {
+            if (err || result.length <= 0) reject(err);
+            else resolve(Library.fromResult(result[0]));
+          }
+        );
+      });
+    }
+
+    static getByType(type){
+      return new Promise((resolve, reject) => {
+        con.query(
+          `SELECT * FROM libraries WHERE type = ?;`
+          ,
+          [
+            type
+          ]
+          , 
+          function (err, result) 
+          {
+            if (err || result.length <= 0) reject(err);
+            else resolve(result);
+          }
+        );
+      });
+    }
   
     create(){
       con.query(

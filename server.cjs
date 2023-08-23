@@ -54,7 +54,7 @@ app.get('/', (req, res) => {
 app.get('/inscription', (req, res) => {
   let context = {
   };
-  res.render('inscription.html.twig' , context);
+  res.render('users/inscription.html.twig' , context);
 });
 
 app.get('/inscriptionUser', (req, res) => {
@@ -73,7 +73,7 @@ app.post('/inscriptionUser', (req, res) => {
     user.create();
     context.userSession = user;
     req.session.user = user;
-    res.render('accountValidated.html.twig' , context);
+    res.render('users/accountValidated.html.twig' , context);
   }
   else{
     context.message = "Passwords do not match";
@@ -213,14 +213,41 @@ app.get('/store', (req, res) => {
   }
   library_model.Library.getAll().then((libraries) => {
     context.libraries = libraries;
-    res.render("store.html.twig" , context);
+    res.render("libraries/store.html.twig" , context);
   })
   .catch((err) => {
     console.log(err);
     context.message = "No libraries";
-    res.render("store.html.twig" , context);
+    res.render("libraries/store.html.twig" , context);
   });
-  
+});
+
+app.get('/store/:type', (req, res) => {
+  let context = {
+  };
+  if (req.session.user){
+    let user = user_model.User.fromResult(req.session.user);
+    context.userSession = user;
+  }
+  library_model.Library.getByType(req.params.type).then((libraries) => {
+    context.libraries = libraries;
+    res.render("libraries/store.html.twig" , context);
+  })
+  .catch((err) => {
+    res.render("libraries/store.html.twig" , context);
+  });
+});
+
+app.get('/library/:uuid', (req, res) => {
+  let context = {
+  };
+  if (req.session.user){
+    let user = user_model.User.fromResult(req.session.user);
+    context.userSession = user;
+  }
+  let library = library_model.Library.findByUuid(req.params.uuid);
+  context.library = library;
+  res.render("libraries/one.html.twig", context);
 });
 
 //////////////////////////////////////////////// AUTRES //////////////////////////////////////////////////////////////////////
