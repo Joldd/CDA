@@ -144,6 +144,23 @@ class Library {
         }).bind(this)
       );
     }
+
+    delete(){
+      con.query(
+        `DELETE FROM libraries WHERE id = ?`
+        ,
+        [
+          this.id
+        ]
+        , 
+        (function (err, result) 
+        {
+          if (err) throw err;
+          this.id = result.insertId;
+          console.log("Library deleted");
+        }).bind(this)
+      );
+    }
   
     update(){
       con.query(

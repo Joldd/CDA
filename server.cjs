@@ -117,10 +117,13 @@ app.post('/login', (req, res) => {
 app.get('/profile', (req, res) => {
   let context = {
   };
-  if(req.session.user !=  null){
-    context.userSession = req.session.user;                                                                   
-  };
-  res.render('forms/profile.html.twig' , context);
+  if (req.session.user !=  null){
+    context.userSession = req.session.user; 
+    res.render('forms/profile.html.twig' , context);                                                                  
+  }
+  else {
+    res.render('404.html.twig' , context);   
+  }
 });
 
 app.post('/profile', (req, res) => {
@@ -247,13 +250,88 @@ app.get('/store/:type', (req, res) => {
 app.get('/library/:uuid', (req, res) => {
   let context = {
   };
-  if (req.session.user){
-    let user = user_model.User.fromResult(req.session.user);
-    context.userSession = user;
-  }
-  let library = library_model.Library.findByUuid(req.params.uuid);
-  context.library = library;
-  res.render("libraries/one.html.twig", context);
+  library_model.Library.findByUuid(req.params.uuid).then((library) => {
+    context.library = library;
+    if (req.session.user){
+      let user = user_model.User.fromResult(req.session.user);
+      context.userSession = user;
+      if (library.owner_id == user.id){
+        context.myLibrary = true;
+      }
+    }
+    res.render("libraries/one.html.twig", context);
+  });  
+});
+
+app.get('/library/:uuid/modify', (req, res) => {
+  let context = {
+  };
+  library_model.Library.findByUuid(req.params.uuid).then((library) => {
+    context.library = library;
+    if (req.session.user){
+      let user = user_model.User.fromResult(req.session.user);
+      context.userSession = user;
+      if (library.owner_id == user.id){
+        res.render("libraries/modify.html.twig", context);
+      }
+      else {
+        res.render("404.html.twig", context);
+      }
+    }
+    else {
+      res.render("404.html.twig", context);
+    }
+  });  
+});
+
+app.post('/library/:uuid/modify', (req, res) => {
+  let context = {
+  };
+  library_model.Library.findByUuid(req.params.uuid).then((library) => {
+    context.library = library;
+    if (req.session.user){
+      let user = user_model.User.fromResult(req.session.user);
+      context.userSession = user;
+      if (library.owner_id == user.id){
+        context.myLibrary = true;
+        library.title = req.body.title;
+        library.price = req.body.price;
+        library.description = req.body.description;
+        library.update();
+        context.message = "Your library has been updated !"
+        res.render("libraries/one.html.twig", context);
+      }
+      else {
+        res.render("404.html.twig", context);
+      }
+    }
+    else {
+      res.render("404.html.twig", context);
+    }
+  });  
+});
+
+app.get('/library/:uuid/delete', (req, res) => {
+  let context = {
+  };
+  library_model.Library.findByUuid(req.params.uuid).then((library) => {
+    context.library = library;
+    if (req.session.user){
+      let user = user_model.User.fromResult(req.session.user);
+      context.userSession = user;
+      if (library.owner_id == user.id){
+        library.delete();
+        context.message = "Your library has been deleted !"
+        res.render("forms/libraries.html.twig", context);
+      }
+      else {
+        res.render("404.html.twig", context);
+      }
+    }
+    else {
+      res.render("404.html.twig", context);
+    }
+  });  
 });
 
 //////////////////////////////////////////////// AUTRES //////////////////////////////////////////////////////////////////////
