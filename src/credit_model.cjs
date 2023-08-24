@@ -11,7 +11,7 @@ class Credit {
     constructor(){
       this.id;
       this.purchaseDate;
-      this.validity = 2;
+      this.validity;
       this.price = 1;
       this.user_id;
     }

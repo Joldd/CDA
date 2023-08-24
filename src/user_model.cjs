@@ -60,6 +60,9 @@ class User {
 
     static findById(id){
       return new Promise((resolve, reject) => {
+        if (id == null){
+          return reject("No user connected");
+        }
         con.query(
           `SELECT * FROM users WHERE id = ?;`
           ,
@@ -77,44 +80,47 @@ class User {
     }
   
     create(){
-      con.query(
-        `INSERT INTO users(
-          name,
-          password,
-          salt,
-          email,
-          mailIsConfirmed,
-          image,
-          description,
-          societyAdress,
-          siren,
-          paypalAdress,
-          kbis)
-          VALUES(?,?,?,?,?,?,?,?,?,?,?)`
-        ,
-        [
-          this.name, 
-          this.password, 
-          this.salt, 
-          this.email, 
-          this.mailIsConfirmed, 
-          this.image, 
-          this.description, 
-          this.societyAdress, 
-          this.siren, 
-          this.paypalAdress, 
-          this.kbis
-        ]
-        , 
-        (function (err, result) 
-        {
-          if (err) throw err;
-          else {
-            this.id = result.insertId;
-            console.log("User created");
-          }
-        }).bind(this)
-      );
+      return new Promise(() => {
+        con.query(
+          `INSERT INTO users(
+            name,
+            password,
+            salt,
+            email,
+            mailIsConfirmed,
+            image,
+            description,
+            societyAdress,
+            siren,
+            paypalAdress,
+            kbis)
+            VALUES(?,?,?,?,?,?,?,?,?,?,?)`
+          ,
+          [
+            this.name, 
+            this.password, 
+            this.salt, 
+            this.email, 
+            this.mailIsConfirmed, 
+            this.image, 
+            this.description, 
+            this.societyAdress, 
+            this.siren, 
+            this.paypalAdress, 
+            this.kbis
+          ]
+          , 
+          (function (err, result) 
+          {
+            if (err) throw err;
+            else {
+              this.id = result.insertId;
+              resolve(this);
+              console.log("User created");
+            }
+          }).bind(this)
+        );
+      });
     }
   
     update(){

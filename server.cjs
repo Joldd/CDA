@@ -71,10 +71,15 @@ app.post('/inscriptionUser', (req, res) => {
     let user = new user_model.User();
     user.email = req.body.email;
     user.password = req.body.password;
-    user.create();
-    context.userSession = user;
-    req.session.user = user;
-    res.render('users/accountValidated.html.twig' , context);
+    user.create().then(() => {
+      context.userSession = user;
+      req.session.user_id = user.id;
+      res.render('users/accountValidated.html.twig' , context);
+    })
+    .catch((err) => {
+      context.message = "User already exists";
+      res.render('forms/inscriptionUser.html.twig' , context);
+    });  
   }
   else{
     context.message = "Passwords do not match";
@@ -99,7 +104,7 @@ app.post('/login', (req, res) => {
   };
     user_model.User.findByMail(req.body.email).then((user) => {
     if (user.password == req.body.password){
-      req.session.user = user;
+      req.session.user_id = user.id;
       context.userSession = user;
       res.render('index.html.twig' , context);
     }
@@ -118,44 +123,48 @@ app.post('/login', (req, res) => {
 app.get('/profile', (req, res) => {
   let context = {
   };
-  if (req.session.user !=  null){
-    context.userSession = req.session.user; 
-    res.render('forms/profile.html.twig' , context);                                                                  
-  }
-  else {
-    res.render('404.html.twig' , context);   
-  }
+  user_model.User.findById(req.session.user_id).then((user) => {
+    context.userSession = user; 
+    res.render('forms/profile.html.twig' , context);
+  })
+  .catch(() => {
+    res.render('404.html.twig' , context); 
+  });
 });
 
 app.post('/profile', (req, res) => {
   let context = {
   };
-  let user = user_model.User.fromResult(req.session.user);
-  if (req.body.password == req.body.repassword){
-    if (req.body.email.length > 0){
-      user.email = req.body.email;  
+  user_model.User.findById(req.session.user_id).then((user) => {
+    if (req.body.password == req.body.repassword){
+      if (req.body.email.length > 0){
+        user.email = req.body.email;  
+      }
+      if (req.body.password.length > 0){
+        user.password = req.body.password;
+      }
+      user.update();
+      req.session.user_id = user.id;
+      context.userSession = user;
+      context.message = "Your profile has been updated !";
+      context.color = "green";
+      res.render('forms/profile.html.twig' , context);
     }
-    if (req.body.password.length > 0){
-      user.password = req.body.password;
+    else {
+      context.message = "Passwords do not match !";
+      context.color = "red";
+      res.render('forms/profile.html.twig' , context);
     }
-    user.update();
-    req.session.user = user;
-    context.userSession = user;
-    context.message = "Your profile has been updated !";
-    context.color = "green";
-    res.render('forms/profile.html.twig' , context);
-  }
-  else {
-    context.message = "Passwords do not match !";
-    context.color = "red";
-    res.render('forms/profile.html.twig' , context);
-  }
+  })
+  .catch(() => {
+    res.render('404.html.twig' , context); 
+  });
 });
 
 app.post('/disconnect', (req, res) => {
   let context = {
   };
-  req.session.user = null;
+  req.session.user_id = null;
   res.render('index.html.twig' , context);
 });
 
@@ -164,66 +173,67 @@ app.post('/disconnect', (req, res) => {
 app.get('/libraries', (req, res) => {
   let context = {
   };
-  if (req.session.user != null){
-    let user = user_model.User.fromResult(req.session.user);
+  user_model.User.findById(req.session.user_id).then((user) => {
     context.userSession = user;
     user.getLibraries().then((libraries) => {
-      context.libraries = libraries;
-      res.render('forms/libraries.html.twig' , context);
+    context.libraries = libraries;
+    res.render('forms/libraries.html.twig' , context);
     })
     .catch((err) => {
       console.log(err);
       res.render('forms/libraries.html.twig' , context);
     });
-  }
-  else {
+  })
+  .catch(() => {
     res.render('404.html.twig' , context);
-  }
-  
+  }); 
 });
 
 app.post('/newLibrary', (req, res) => {
-  let user = user_model.User.fromResult(req.session.user);
-  let library = new library_model.Library();
-  library.owner_id = user.id;
-  library.title = req.body.title;
-  library.price = req.body.price;
-  library.type = req.body.type;
-
-  let uploadedLibrary = req.files.library;
-  library.uuid  = uuidv4();
-  let uploadLibraryPath = "media/libraries/"+library.uuid+".lib";
-  uploadedLibrary.mv(uploadLibraryPath, function (err) {
-    if (err) {
-      console.log(err);
-      console.log("Failed !!");
-    } else console.log("Successfully Uploaded !!");
+  user_model.User.findById(req.session.user_id).then((user) => {
+    let library = new library_model.Library();
+    library.owner_id = user.id;
+    library.title = req.body.title;
+    library.price = req.body.price;
+    library.type = req.body.type;
+    let uploadedLibrary = req.files.library;
+    library.uuid  = uuidv4();
+    let uploadLibraryPath = "media/libraries/"+library.uuid+".lib";
+    uploadedLibrary.mv(uploadLibraryPath, function (err) {
+      if (err) {
+        console.log(err);
+        console.log("Failed !!");
+      } else console.log("Successfully Uploaded !!");
+    });
+    let uploadedImage = req.files.image;
+    library.image  = uuidv4();
+    let uploadImagePath = "media/img/"+library.image+".png";
+    uploadedImage.mv(uploadImagePath, function (err) {
+      if (err) {
+        console.log(err);
+        console.log("Failed !!");
+      } else console.log("Successfully Uploaded !!");
+    });
+    library.create();
+    res.redirect('/libraries');
+  })
+  .catch(() => {
+    res.render('404.html.twig' , context);
   });
-
-  let uploadedImage = req.files.image;
-  library.image  = uuidv4();
-  let uploadImagePath = "media/img/"+library.image+".png";
-  uploadedImage.mv(uploadImagePath, function (err) {
-    if (err) {
-      console.log(err);
-      console.log("Failed !!");
-    } else console.log("Successfully Uploaded !!");
-  });
-
-  library.create();
-  res.redirect('/libraries');
 });
 
 app.get('/store', (req, res) => {
   let context = {
   };
-  if (req.session.user){
-    let user = user_model.User.fromResult(req.session.user);
-    context.userSession = user;
-  }
   library_model.Library.getAll().then((libraries) => {
     context.libraries = libraries;
-    res.render("libraries/store.html.twig" , context);
+    user_model.User.findById(req.session.user_id).then((user) => {
+      context.userSession = user;
+      res.render("libraries/store.html.twig" , context);
+    })
+    .catch(() => {
+      res.render("libraries/store.html.twig" , context);
+    });
   })
   .catch((err) => {
     console.log(err);
@@ -235,13 +245,15 @@ app.get('/store', (req, res) => {
 app.get('/store/:type', (req, res) => {
   let context = {
   };
-  if (req.session.user){
-    let user = user_model.User.fromResult(req.session.user);
-    context.userSession = user;
-  }
   library_model.Library.getByType(req.params.type).then((libraries) => {
     context.libraries = libraries;
-    res.render("libraries/store.html.twig" , context);
+    user_model.User.findById(req.session.user_id).then((user) => {
+      context.userSession = user;
+      res.render("libraries/store.html.twig" , context);
+    })
+    .catch(() => {
+      res.render("libraries/store.html.twig" , context);
+    })
   })
   .catch((err) => {
     res.render("libraries/store.html.twig" , context);
@@ -253,14 +265,19 @@ app.get('/library/:uuid', (req, res) => {
   };
   library_model.Library.findByUuid(req.params.uuid).then((library) => {
     context.library = library;
-    if (req.session.user){
-      let user = user_model.User.fromResult(req.session.user);
+    user_model.User.findById(req.session.user_id).then((user) => {
       context.userSession = user;
       if (library.owner_id == user.id){
         context.myLibrary = true;
+        res.render("libraries/one.html.twig", context);
       }
-    }
-    res.render("libraries/one.html.twig", context);
+    })
+    .catch(() => {
+      res.render("libraries/one.html.twig", context);
+    });
+  })
+  .catch(() => {
+    res.render("404.html.twig", context);
   });  
 });
 
@@ -269,8 +286,7 @@ app.get('/library/:uuid/modify', (req, res) => {
   };
   library_model.Library.findByUuid(req.params.uuid).then((library) => {
     context.library = library;
-    if (req.session.user){
-      let user = user_model.User.fromResult(req.session.user);
+    user_model.User.findById(req.session.user_id).then((user) => {
       context.userSession = user;
       if (library.owner_id == user.id){
         res.render("libraries/modify.html.twig", context);
@@ -278,11 +294,14 @@ app.get('/library/:uuid/modify', (req, res) => {
       else {
         res.render("404.html.twig", context);
       }
-    }
-    else {
+    })
+    .catch(() => {
       res.render("404.html.twig", context);
-    }
-  });  
+    });   
+  })
+  .catch(() => {
+    res.render("404.html.twig", context);
+  });   
 });
 
 app.post('/library/:uuid/modify', (req, res) => {
@@ -290,8 +309,7 @@ app.post('/library/:uuid/modify', (req, res) => {
   };
   library_model.Library.findByUuid(req.params.uuid).then((library) => {
     context.library = library;
-    if (req.session.user){
-      let user = user_model.User.fromResult(req.session.user);
+    user_model.User.findById(req.session.user_id).then((user) => {
       context.userSession = user;
       if (library.owner_id == user.id){
         context.myLibrary = true;
@@ -305,10 +323,13 @@ app.post('/library/:uuid/modify', (req, res) => {
       else {
         res.render("404.html.twig", context);
       }
-    }
-    else {
+    })
+    .catch(() => {
       res.render("404.html.twig", context);
-    }
+    });
+  })
+  .catch(() => {
+    res.render("404.html.twig", context);
   });  
 });
 
@@ -317,8 +338,7 @@ app.get('/library/:uuid/delete', (req, res) => {
   };
   library_model.Library.findByUuid(req.params.uuid).then((library) => {
     context.library = library;
-    if (req.session.user){
-      let user = user_model.User.fromResult(req.session.user);
+    user_model.User.findById(req.session.user_id).then((user) => {
       context.userSession = user;
       if (library.owner_id == user.id){
         library.delete();
@@ -328,24 +348,28 @@ app.get('/library/:uuid/delete', (req, res) => {
       else {
         res.render("404.html.twig", context);
       }
-    }
-    else {
+    })
+    .catch(() => {
       res.render("404.html.twig", context);
-    }
-  });  
+    });
+  })
+  .catch(() => {
+    res.render("404.html.twig", context);
+  });
 });
+
 //////////////////////////////////////////////// CREDITS //////////////////////////////////////////////////////////////////////
 
 app.get('/credits', (req, res) => {
   let context = {
   };
-  if (req.session.user){
-    let user = user_model.User.fromResult(req.session.user);
+  user_model.User.findById(req.session.user_id).then((user) => {
     context.userSession = user;
     user.getLibraries().then((libraries) => {
       context.libraries = libraries;
       let credit = new credit_model.Credit();
       credit.user_id = user.id;
+      console.log(credit);
       credit.create();
       // credit_model.createMultiple(100, user.id);
       res.render('forms/libraries.html.twig' , context);
@@ -354,10 +378,10 @@ app.get('/credits', (req, res) => {
       console.log(err);
       res.render('forms/libraries.html.twig' , context);
     });
-  }
-  else {
+  })
+  .catch(() => {
     res.render("404.html.twig", context);
-  }
+  });
 });
 
 //////////////////////////////////////////////// AUTRES //////////////////////////////////////////////////////////////////////
@@ -375,6 +399,10 @@ app.get('/media/:type/:uuid', function (req, res) {
 });
 
 app.use('/static', express.static('static'))
+
+app.use(function (req, res) {
+  res.status(404).render("404.html.twig");
+})
 
 app.listen(PORT, HOST, () => {
   console.log(`Running on http://${HOST}:${PORT}`);
