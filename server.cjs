@@ -1,11 +1,5 @@
 'use strict';
 
-const tables = require("./src/bdd.cjs");
-const user_model = require("./src/user_model.cjs");
-const library_model = require("./src/library_model.cjs");
-const credit_model = require("./src/credit_model.cjs");
-const user_library_model = require("./src/user_library_model.cjs");
-
 const express = require('express');
 const mysql = require('mysql');
 const Twig = require("twig");
@@ -14,12 +8,12 @@ const fileUpload = require('express-fileupload');
 const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
 
-var con = mysql.createConnection({
-  host: "cda-db",
-  user: "admin",
-  password: "tempPassword1234!",
-  database: "db"
-});
+const tables = require("./src/bdd.cjs");
+const user_model = require("./src/user_model.cjs");
+const library_model = require("./src/library_model.cjs");
+const credit_model = require("./src/credit_model.cjs");
+const user_library_model = require("./src/user_library_model.cjs");
+
 
 //////////////////////////////////////////////BDD//////////////////////////////////////////////////////////////////////
 tables.createTables();
@@ -176,8 +170,14 @@ app.get('/libraries', (req, res) => {
   user_model.User.findById(req.session.user_id).then((user) => {
     context.userSession = user;
     user.getLibraries().then((libraries) => {
-    context.libraries = libraries;
-    res.render('forms/libraries.html.twig' , context);
+      context.libraries = libraries;
+      user.getCredits().then((credits) => {
+        context.credits = credits;
+        res.render('forms/libraries.html.twig' , context);
+      })
+      .catch((err) => {
+        res.render('forms/libraries.html.twig' , context);
+      })
     })
     .catch((err) => {
       console.log(err);
@@ -269,6 +269,9 @@ app.get('/library/:uuid', (req, res) => {
       context.userSession = user;
       if (library.owner_id == user.id){
         context.myLibrary = true;
+        res.render("libraries/one.html.twig", context);
+      }
+      else{
         res.render("libraries/one.html.twig", context);
       }
     })
@@ -367,12 +370,7 @@ app.get('/credits', (req, res) => {
     context.userSession = user;
     user.getLibraries().then((libraries) => {
       context.libraries = libraries;
-      let credit = new credit_model.Credit();
-      credit.user_id = user.id;
-      console.log(credit);
-      credit.create();
-      // credit_model.createMultiple(100, user.id);
-      res.render('forms/libraries.html.twig' , context);
+      credit_model.createMultiple(100, user.id);
     })
     .catch((err) => {
       console.log(err);

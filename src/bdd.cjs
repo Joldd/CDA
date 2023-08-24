@@ -218,4 +218,4 @@ function createTables(){
   });
 }
 
-module.exports = {createTables};
+module.exports = {createTables, con};

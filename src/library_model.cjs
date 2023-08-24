@@ -1,11 +1,4 @@
-const mysql = require('mysql');
-
-var con = mysql.createConnection({
-  host: "cda-db",
-  user: "admin",
-  password: "tempPassword1234!",
-  database: "db"
-});
+const tables = require("./bdd.cjs")
 
 class Library {
     constructor(){
@@ -25,7 +18,7 @@ class Library {
 
     static getAll(){
       return new Promise((resolve, reject) => {
-        con.query(
+        tables.con.query(
           `SELECT * FROM libraries;`
           , 
           function (err, result) 
@@ -56,7 +49,7 @@ class Library {
 
     static findById(id){
       return new Promise((resolve, reject) => {
-        con.query(
+        tables.con.query(
           `SELECT * FROM libraries WHERE id = ?;`
           ,
           [
@@ -74,7 +67,7 @@ class Library {
 
     static findByUuid(uuid){
       return new Promise((resolve, reject) => {
-        con.query(
+        tables.con.query(
           `SELECT * FROM libraries WHERE uuid = ?;`
           ,
           [
@@ -92,7 +85,7 @@ class Library {
 
     static getByType(type){
       return new Promise((resolve, reject) => {
-        con.query(
+        tables.con.query(
           `SELECT * FROM libraries WHERE type = ?;`
           ,
           [
@@ -109,7 +102,7 @@ class Library {
     }
   
     create(){
-      con.query(
+      tables.con.query(
         `INSERT INTO libraries(
           title,
           uuid,
@@ -146,7 +139,7 @@ class Library {
     }
 
     delete(){
-      con.query(
+      tables.con.query(
         `DELETE FROM libraries WHERE id = ?`
         ,
         [
@@ -163,7 +156,7 @@ class Library {
     }
   
     update(){
-      con.query(
+      tables.con.query(
         `UPDATE libraries
         SET title = ?,
         uuid = ?,

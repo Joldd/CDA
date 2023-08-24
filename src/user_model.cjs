@@ -1,11 +1,5 @@
-const mysql = require('mysql');
+const tables = require("./bdd.cjs")
 
-var con = mysql.createConnection({
-  host: "cda-db",
-  user: "admin",
-  password: "tempPassword1234!",
-  database: "db"
-});
 
 class User {
     constructor(){
@@ -42,7 +36,7 @@ class User {
   
     static findByMail(email){
       return new Promise((resolve, reject) => {
-        con.query(
+        tables.con.query(
           `SELECT * FROM users WHERE email = ?;`
           ,
           [
@@ -63,7 +57,7 @@ class User {
         if (id == null){
           return reject("No user connected");
         }
-        con.query(
+        tables.con.query(
           `SELECT * FROM users WHERE id = ?;`
           ,
           [
@@ -80,8 +74,8 @@ class User {
     }
   
     create(){
-      return new Promise(() => {
-        con.query(
+      return new Promise((resolve, reject) => {
+        tables.con.query(
           `INSERT INTO users(
             name,
             password,
@@ -112,7 +106,7 @@ class User {
           , 
           (function (err, result) 
           {
-            if (err) throw err;
+            if (err) reject(err);
             else {
               this.id = result.insertId;
               resolve(this);
@@ -124,7 +118,7 @@ class User {
     }
   
     update(){
-      con.query(
+      tables.con.query(
         `UPDATE users
         SET name = ?,
         email = ?,
@@ -164,9 +158,28 @@ class User {
 
     getLibraries(){
       return new Promise((resolve, reject) => { 
-        con.query(
+        tables.con.query(
           `SELECT * FROM libraries
           WHERE owner_id = ?;`
+          ,
+          [
+            this.id
+          ]
+          , 
+          function (err, result) 
+          {
+            if (err) reject(err);
+            else resolve(result);
+          }
+        );
+      });
+    } 
+
+    getCredits(){
+      return new Promise((resolve, reject) => { 
+        tables.con.query(
+          `SELECT * FROM credits
+          WHERE user_id = ?;`
           ,
           [
             this.id
