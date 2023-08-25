@@ -16,7 +16,9 @@
 
       {# Boutton fric #}
       <div class="d-flex flex-column justify-content-end">
-        <div>Salut</div>
+        {% if credits is defined %}
+        <div>{{credits.length}} <span class="bi bi-currency-bitcoin"></span></div>
+        {% endif %}
         <div>
           <a href="/credits" class="btn btn-primary btn-lg me-3">Buy credits</a>
         </div>

@@ -13,7 +13,7 @@
     <main >
 
       {% if message is defined %}
-      <div class="mt-2 text-center" style="color:green">{{message}}</div>
+      <div class="mt-2 text-center" style="color:{{color}}">{{message}}</div>
       {% endif %}
       <div></div>
       <div class="mt-5" style="width: 100%;">
@@ -27,7 +27,7 @@
           <a href="/library/{{library.uuid}}/modify" class="btn btn-lg btn-warning">Modify</a>
           <a href="/library/{{library.uuid}}/delete" class="ms-2 btn btn-lg btn-danger">Delete</a>
           {% else %}
-          <button class="btn btn-lg btn-custom">Buy Asset</button>
+          <a href="/library/{{library.uuid}}/buy" class="btn btn-lg btn-custom">Buy Asset</a>
           {% endif %}
         </div>
       </div>

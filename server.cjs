@@ -38,10 +38,13 @@ app.set("twig options", {
 app.get('/', (req, res) => {
   let context = {
   };
-  if(req.session.user !=  null){
-    context.userSession = req.session.user;
-  }
-  res.render('index.html.twig' , context);
+  user_model.User.findById(req.session.user_id).then((user) => {
+    context.userSession = user;
+    res.render('index.html.twig' , context);
+  })
+  .catch(() => {
+    res.render('index.html.twig' , context);
+  });
 });
 
 //////////////////////////////////////////////// USER //////////////////////////////////////////////////////////////////////
@@ -321,6 +324,7 @@ app.post('/library/:uuid/modify', (req, res) => {
         library.description = req.body.description;
         library.update();
         context.message = "Your library has been updated !";
+        context.color = "green";
         res.render("libraries/one.html.twig", context);
       }
       else {
@@ -361,23 +365,48 @@ app.get('/library/:uuid/delete', (req, res) => {
   });
 });
 
+app.get('/library/:uuid/buy', (req, res) => {
+  let context = {
+  };
+  library_model.Library.findByUuid(req.params.uuid).then((library) => {
+    context.library = library;
+    user_model.User.findById(req.session.user_id).then((user) => {
+      context.userSession = user;
+      user.getCredits().then((credits) => {
+        if (credits.length >= library.price){
+          context.message = "Library bought !";
+          context.color = "green";
+        }
+        else {
+          context.message = "No enough credits !";
+          context.color = "red";
+        }
+        res.render("libraries/one.html.twig", context);
+      })
+      .catch(() => {
+        res.render("404.html.twig", context);
+      });
+    })
+    .catch(() => {
+      res.render("404.html.twig", context);
+    });
+  })
+  .catch(() => {
+    res.render("404.html.twig", context);
+  });
+});
+
 //////////////////////////////////////////////// CREDITS //////////////////////////////////////////////////////////////////////
 
 app.get('/credits', (req, res) => {
   let context = {
   };
   user_model.User.findById(req.session.user_id).then((user) => {
-    context.userSession = user;
-    user.getLibraries().then((libraries) => {
-      context.libraries = libraries;
-      credit_model.createMultiple(100, user.id);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.render('forms/libraries.html.twig' , context);
-    });
+    credit_model.createMultiple(100, user.id);
+    res.redirect("/libraries");
   })
-  .catch(() => {
+  .catch((err) => {
+    console.log(err);
     res.render("404.html.twig", context);
   });
 });
