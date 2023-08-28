@@ -1,4 +1,4 @@
-const tables = require("./bdd.cjs")
+const tables = require("../bdd.cjs")
 
 class Credit {
   constructor(){
