@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <title>404</title>
+    <title>History</title>
     {% include 'includecss.html.twig' %}
     {% include 'includescripts.html.twig' %}
   </head>
@@ -24,15 +24,15 @@
           <td class="form-floating p-3 text-center fw-bold">Picture</td>
           <td class="form-floating p-3 text-center fw-bold">Type</td>
           <td class="form-floating p-3 text-center fw-bold">Purchases Date</td>
-          <td class="form-floating p-3 text-center fw-bold">Price</td>
+          <td class="form-floating p-3 text-center fw-bold">Purchase price</td>
         </tr>
         {% for library in libraries %}       
           <tr>
             <td class="form-floating p-3 text-center">{{library.title}}</td>
-            <td class="form-floating p-3 text-center"><img src="" alt="" height="100"></td>
-            <td class="form-floating p-3 text-center"></td>
-            <td class="form-floating p-3 text-center">{{user_library.purchaseDate}}</td>
-            <td class="form-floating p-3 text-center"> €</td>
+            <td class="form-floating p-3 text-center"><img src="/media/img/{{library.image}}.png" alt="" height="100"></td>
+            <td class="form-floating p-3 text-center">{{library.type}}</td>
+            <td class="form-floating p-3 text-center">{{library.purchaseDate.getMonth()}} / {{library.purchaseDate.getDate()}} / {{library.purchaseDate.getFullYear()}}</td>
+            <td class="form-floating p-3 text-center">{{library.price}} <i class="bi bi-currency-bitcoin"></i></td>
           </tr>
         {% endfor %}
       {% endif %}

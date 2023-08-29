@@ -108,6 +108,23 @@ class Credit {
       );
     });
   } 
+
+  delete(){
+    tables.con.query(
+      `DELETE FROM credits WHERE id = ?`
+      ,
+      [
+        this.id
+      ]
+      , 
+      (function (err, result) 
+      {
+        if (err) throw err;
+        this.id = result.insertId;
+        console.log("Credit deleted");
+      }).bind(this)
+    );
+  }
 }
 
 function createMultiple(n, user_id){
@@ -118,4 +135,4 @@ function createMultiple(n, user_id){
   }
 }
 
-  module.exports = {Credit, createMultiple};
+module.exports = {Credit, createMultiple};

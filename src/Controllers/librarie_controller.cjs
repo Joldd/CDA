@@ -5,6 +5,7 @@ const { v4: uuidv4 } = require('uuid');
 const library_model = require("../Models/library_model.cjs");
 const user_model = require("../Models/user_model.cjs");
 const user_library_model = require("../Models/user_library_model.cjs");
+const credit_model = require("../Models/credit_model.cjs");
 
 app.get('/libraries', (req, res) => {
     let context = {
@@ -193,7 +194,14 @@ app.get('/library/:uuid/delete', (req, res) => {
             if (library.owner_id == user.id){
                 library.delete();
                 context.message = "Your library has been deleted !"
-                res.render("forms/libraries.html.twig", context);
+                user.getLibraries().then((libraries) => {
+                    context.libraries = libraries;
+                    res.render("forms/libraries.html.twig", context);
+                })
+                .catch((err) => {
+                    console.log(err);
+                    res.render("404.html.twig", context);
+                })
             }
             else {
                 res.render("404.html.twig", context);
@@ -215,20 +223,30 @@ app.get('/library/:uuid/buy', (req, res) => {
         context.library = library;
         user_model.User.findById(req.session.user_id).then((user) => {
             context.userSession = user;
-            user.getCredits().then((credits) => {
-                if (credits.length >= library.price){
-                    let user_library = new user_library_model.User_Library();
-                    user_library.user_id = user.id;
-                    user_library.library_id = library.id;
-                    user_library.create();
-                    context.message = "Library bought !";
-                    context.color = "green";
+            user.getCredits().then((creditsUser) => {
+                if (creditsUser.length >= library.price){
+                    library.getCredits(user.id).then((creditsSpent) => {
+                        for (i=0 ; i<creditsSpent.length ; i++){                       
+                            credit_model.Credit.fromResult(creditsSpent[i]).delete();
+                        }
+                        let user_library = new user_library_model.User_Library();
+                        user_library.user_id = user.id;
+                        user_library.library_id = library.id;
+                        user_library.create();
+                        context.message = "Library bought !";
+                        context.color = "green";
+                        res.render("libraries/one.html.twig", context);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        res.render("404.html.twig", context);
+                    })   
                 }
                 else {
                     context.message = "No enough credits !";
                     context.color = "red";
-                }
-                res.render("libraries/one.html.twig", context);
+                    res.render("libraries/one.html.twig", context);
+                }  
             })
             .catch(() => {
                 res.render("404.html.twig", context);
@@ -249,11 +267,16 @@ app.get('/libraries/history', (req, res) => {
     user_model.User.findById(req.session.user_id).then((user) => {
         context.userSession = user;
         let libraries_promises = [];
+        let purchaseDates = [];
         user.getPurchases().then((users_libraries) => {
             for (let i = 0 ; i < users_libraries.length ; i++){
+                purchaseDates.push(users_libraries[i].purchaseDate);
                 libraries_promises.push(user_library_model.User_Library.fromResult(users_libraries[i]).getLibrary());
             }
             Promise.all(libraries_promises).then((libraries) => {
+                for (let i = 0 ; i < libraries.length ; i++){
+                    libraries[i].purchaseDate = purchaseDates[i];
+                }
                 context.libraries = libraries;
                 res.render('libraries/history.html.twig' , context);
             })

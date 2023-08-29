@@ -149,7 +149,6 @@ class Library {
         (function (err, result) 
         {
           if (err) throw err;
-          this.id = result.insertId;
           console.log("Library deleted");
         }).bind(this)
       );
@@ -192,7 +191,26 @@ class Library {
           console.log("Library maj");
         }
       );
-    } 
+    }
+
+    getCredits(user_id){
+      return new Promise((resolve, reject) => {
+        tables.con.query(
+          `SELECT * FROM credits WHERE user_id = ? LIMIT ?;`
+          ,
+          [
+            user_id,
+            this.price
+          ]
+          , 
+          function (err, result) 
+          {
+            if (err || result.length <= 0) reject(err);
+            else resolve(result);
+          }
+        );
+      });
+    }
   }
 
   module.exports = {Library};
