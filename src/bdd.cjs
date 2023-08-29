@@ -155,7 +155,7 @@ function createTables(){
         id INT NOT NULL AUTO_INCREMENT,
         user_id INT NOT NULL,
         library_id INT NULL,
-        purchaseDate DATETIME NOT NULL,
+        purchaseDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (id),
         FOREIGN KEY (library_id) REFERENCES libraries(id),
         FOREIGN KEY (user_id) REFERENCES users(id)

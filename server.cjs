@@ -9,7 +9,6 @@ const fs = require('fs');
 
 const tables = require("./src/bdd.cjs");
 const user_model = require("./src/Models/user_model.cjs")
-const user_library_model = require("./src/Models/user_library_model.cjs");
 
 const user_controller = require("./src/Controllers/user_controller.cjs");
 const librarie_controller = require("./src/Controllers/librarie_controller.cjs");

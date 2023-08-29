@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>404</title>
+    {% include 'includecss.html.twig' %}
+    {% include 'includescripts.html.twig' %}
+  </head>
+
+  <body style="background-color :#1C1F24; color:white">
+
+    {% include 'header.html.twig' %}
+
+    <main >
+
+      {# Tableau des achats #}
+      <h3 class="d-flex justify-content-center mt-5">Your purchases</h3>
+
+      {% if libraries.length <= 0 %}
+      <div class="form-floating p-1 text-center">List empty</div>
+      {% else %}
+      <table class="d-flex justify-content-center mt-3">
+        <tr>
+          <td class="b form-floating p-3 text-center fw-bold">Name</td>
+          <td class="form-floating p-3 text-center fw-bold">Picture</td>
+          <td class="form-floating p-3 text-center fw-bold">Type</td>
+          <td class="form-floating p-3 text-center fw-bold">Purchases Date</td>
+          <td class="form-floating p-3 text-center fw-bold">Price</td>
+        </tr>
+        {% for library in libraries %}       
+          <tr>
+            <td class="form-floating p-3 text-center">{{library.title}}</td>
+            <td class="form-floating p-3 text-center"><img src="" alt="" height="100"></td>
+            <td class="form-floating p-3 text-center"></td>
+            <td class="form-floating p-3 text-center">{{user_library.purchaseDate}}</td>
+            <td class="form-floating p-3 text-center"> €</td>
+          </tr>
+        {% endfor %}
+      {% endif %}
+      </table>
+
+    </main>
+    
+  </body>
+
+</html>

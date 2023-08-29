@@ -27,6 +27,7 @@
       {# Boutton d'ajout d'une librarie #}
       <div class="d-flex justify-content-center">
         <button id="newLibrary" class="btn btn-success btn-lg">Add library</button>
+         <a href="/libraries/history" id="history" class="ms-3 btn btn-primary btn-lg">Purchase history</a>
       </div>
 
       {# Menu d'ajout d'une librarie #}
@@ -104,7 +105,7 @@
             <td class="form-floating p-3 text-center">{{library.encouragementsNumber}}</td>
           </tr>
         {% endfor %}
-        {% endif %}
+      {% endif %}
       </table>
 
     </main>

@@ -192,6 +192,25 @@ class User {
           }
         );
       });
+    }
+
+    getPurchases(){
+      return new Promise((resolve, reject) => { 
+        tables.con.query(
+          `SELECT * FROM users_libraries
+          WHERE user_id = ?;`
+          ,
+          [
+            this.id
+          ]
+          , 
+          function (err, result) 
+          {
+            if (err) reject(err);
+            else resolve(result);
+          }
+        );
+      });
     } 
   }
 
