@@ -6,6 +6,7 @@ const library_model = require("../Models/library_model.cjs");
 const user_model = require("../Models/user_model.cjs");
 const user_library_model = require("../Models/user_library_model.cjs");
 const credit_model = require("../Models/credit_model.cjs");
+const { con } = require('../bdd.cjs');
 
 app.get('/libraries', (req, res) => {
     let context = {
@@ -251,6 +252,37 @@ app.get('/library/:uuid/buy', (req, res) => {
             .catch(() => {
                 res.render("404.html.twig", context);
             });
+        })
+        .catch(() => {
+            res.render("404.html.twig", context);
+        });
+    })
+    .catch(() => {
+        res.render("404.html.twig", context);
+    });
+});
+
+app.get('/library/:uuid/download', (req, res) => {
+    let context = {
+    };
+    library_model.Library.findByUuid(req.params.uuid).then((library) => {
+        context.library = library;
+        user_model.User.findById(req.session.user_id).then((user) => {
+            context.userSession = user;
+            user_library_model.User_Library.checkPurchase(user.id,library.id).then((user_library) => {
+                if(user_library.length>0){
+                    let path = "./media/libraries/" + library.uuid +".lib";
+                    res.download(path);
+                }
+                else{
+                    res.render("404.html.twig", context);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+                res.render("404.html.twig", context);
+            })
+           
         })
         .catch(() => {
             res.render("404.html.twig", context);

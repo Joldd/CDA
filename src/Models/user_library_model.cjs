@@ -29,7 +29,7 @@ class User_Library {
         function (err, result) 
         {
           if (err || result.length <= 0) reject(err);
-          else resolve(Library.fromResult(result[0]));
+          else resolve(User_Library.fromResult(result[0]));
         }
       );
     });
@@ -78,7 +78,27 @@ class User_Library {
         }
       );
     });
-  } 
+  }
+
+  static checkPurchase(user_id , library_id){
+    return new Promise((resolve, reject) => {
+      tables.con.query(
+        `SELECT * FROM users_libraries
+        WHERE user_id = ? AND library_id = ?;`
+        ,
+        [
+          user_id,
+          library_id
+        ]
+        , 
+        function (err, result) 
+        {
+          if (err) reject(err);
+          else resolve(result);
+        }
+      );
+    });
+  }
 }
 
 module.exports = {User_Library};
