@@ -293,6 +293,50 @@ app.get('/library/:uuid/download', (req, res) => {
     });
 });
 
+app.get('/library/:uuid/like', (req, res) => {
+    let context = {
+    };
+    library_model.Library.findByUuid(req.params.uuid).then((library) => {
+        context.library = library;
+        user_model.User.findById(req.session.user_id).then((user) => {
+            context.userSession = user;
+            user_library_model.User_Library.checkPurchase(user.id,library.id).then((user_library_result) => {
+                if(user_library_result.length>0){
+                    let user_library = user_library_model.User_Library.fromResult(user_library_result[0]);
+                    if(!user_library.liked){
+                        library.encouragementsNumber++;
+                        library.update();
+                        user_library.liked = true;
+                        user_library.update();
+                        res.redirect("/libraries/history");
+                    }
+                    else{
+                        library.encouragementsNumber--;
+                        library.update();
+                        user_library.liked = false;
+                        user_library.update();
+                        res.redirect("/libraries/history"); 
+                    }   
+                }
+                else{
+                    res.render("404.html.twig", context);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+                res.render("404.html.twig", context);
+            })
+           
+        })
+        .catch(() => {
+            res.render("404.html.twig", context);
+        });
+    })
+    .catch(() => {
+        res.render("404.html.twig", context);
+    });
+});
+
 app.get('/libraries/history', (req, res) => {
     let context = {
     };
@@ -300,14 +344,17 @@ app.get('/libraries/history', (req, res) => {
         context.userSession = user;
         let libraries_promises = [];
         let purchaseDates = [];
+        let liked = [];
         user.getPurchases().then((users_libraries) => {
             for (let i = 0 ; i < users_libraries.length ; i++){
                 purchaseDates.push(users_libraries[i].purchaseDate);
+                liked.push(users_libraries[i].liked);
                 libraries_promises.push(user_library_model.User_Library.fromResult(users_libraries[i]).getLibrary());
             }
             Promise.all(libraries_promises).then((libraries) => {
                 for (let i = 0 ; i < libraries.length ; i++){
                     libraries[i].purchaseDate = purchaseDates[i];
+                    libraries[i].liked = liked[i];
                 }
                 context.libraries = libraries;
                 res.render('libraries/history.html.twig' , context);

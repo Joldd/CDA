@@ -35,8 +35,12 @@
             <td class="form-floating p-3 text-center">{{library.type}}</td>
             <td class="form-floating p-3 text-center">{{library.purchaseDate.getMonth()}} / {{library.purchaseDate.getDate()}} / {{library.purchaseDate.getFullYear()}}</td>
             <td class="form-floating p-3 text-center">{{library.price}} <i class="bi bi-currency-bitcoin"></i></td>
-            <td class="form-floating p-3 text-center fw-bold"><a href="/library/{{library.uuid}}/download" class="bi bi-download"></a></td>
-            <td class="form-floating p-3 text-center fw-bold"><a href="/library/{{library.uuid}}/recommend" class="bi bi-hand-thumbs-up"></a></td>
+            <td class="form-floating p-3 text-center"><a href="/library/{{library.uuid}}/download" class="btnLib bi bi-download"></a></td>
+            {% if library.liked %}
+            <td class="form-floating p-3 text-center"><a href="/library/{{library.uuid}}/like" class="btnLib bi bi-hand-thumbs-up-fill"></a></td>
+            {% else %}
+            <td class="form-floating p-3 text-center"><a href="/library/{{library.uuid}}/like" class="btnLib bi bi-hand-thumbs-up"></a></td>
+            {% endif %}
           </tr>
         {% endfor %}
       {% endif %}

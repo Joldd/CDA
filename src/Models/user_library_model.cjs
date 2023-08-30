@@ -6,6 +6,7 @@ class User_Library {
     this.user_id;
     this.library_id;
     this.purchaseDate;
+    this.liked;
   }
 
   static fromResult(result){
@@ -14,6 +15,7 @@ class User_Library {
     user_library.user_id = result.user_id;
     user_library.library_id = result.library_id;
     user_library.purchaseDate = result.purchaseDate;
+    user_library.liked = result.liked;
     return user_library;
   }
 
@@ -60,6 +62,31 @@ class User_Library {
       );
     });
   }
+
+  update(){
+    tables.con.query(
+      `UPDATE users_libraries
+      SET user_id = ?,
+      library_id = ?,
+      purchaseDate = ?,
+      liked = ?
+      WHERE id = ?;`
+      ,
+      [
+        this.user_id,
+        this.library_id,
+        this.purchaseDate,
+        this.liked,
+        this.id
+      ]
+      , 
+      function (err, result) 
+      {
+        if (err) throw err;
+        else console.log("User_library maj");
+      }
+    );
+  } 
 
   getLibrary(){
     return new Promise((resolve, reject) => {

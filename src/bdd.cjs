@@ -12,22 +12,6 @@ function createTables(){
     if (err) throw err;
     console.log("Connected to bdd cda-db!");
     
-    //Prices
-    con.query(
-      `CREATE TABLE IF NOT EXISTS prices(
-        id INT NOT NULL AUTO_INCREMENT,
-        minNumberPurchased INT NOT NULL,
-        price INT NOT NULL,
-        PRIMARY KEY (id)
-      );`
-      , 
-      function (err, result) 
-      {
-        if (err) throw err;
-        console.log("Table prices created");
-      }
-    );
-    
     //Users
     con.query(
       `CREATE TABLE IF NOT EXISTS users(
@@ -154,8 +138,9 @@ function createTables(){
       `CREATE TABLE IF NOT EXISTS users_libraries(
         id INT NOT NULL AUTO_INCREMENT,
         user_id INT NOT NULL,
-        library_id INT NULL,
+        library_id INT NOT NULL,
         purchaseDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        liked BOOLEAN DEFAULT FALSE,
         PRIMARY KEY (id),
         FOREIGN KEY (library_id) REFERENCES libraries(id),
         FOREIGN KEY (user_id) REFERENCES users(id)
@@ -165,24 +150,6 @@ function createTables(){
       {
         if (err) throw err;
         console.log("Table User_Libraries created");
-      }
-    );
-  
-    //Receipts
-    con.query(
-      `CREATE TABLE IF NOT EXISTS receipts(
-        purchase_id INT NOT NULL,
-        tags VARCHAR(255),
-        purchaseDate DATETIME NOT NULL,
-        name VARCHAR(255) NOT NULL,
-        price INT NOT NULL,
-        FOREIGN KEY (purchase_id) REFERENCES users_libraries(id)
-      );`
-      , 
-      function (err, result) 
-      {
-        if (err) throw err;
-        console.log("Table receipts created");
       }
     );
   
@@ -205,7 +172,7 @@ function createTables(){
 
     //ATTENTION => RESET
     // con.query(
-    //   `DROP TABLE approvement, receipts, users_libraries, libraries_tags, libraries
+    //   `DROP TABLE approvement, receipts, users_libraries, libraries_tags, libraries, credits, discounts,tags
     //   );`
     //   , 
     //   function (err, result) 

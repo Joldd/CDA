@@ -20,3 +20,11 @@
 .gridLine:hover {
   border:solid; 
 }
+
+.btnLib {
+  color : white;
+}
+
+.btnLib:hover {
+  color:black;
+}
