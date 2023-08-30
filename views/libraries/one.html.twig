@@ -26,6 +26,8 @@
           {% if myLibrary %}
           <a href="/library/{{library.uuid}}/modify" class="btn btn-lg btn-warning">Modify</a>
           <a href="/library/{{library.uuid}}/delete" class="ms-2 btn btn-lg btn-danger">Delete</a>
+          {% elseif owned %}
+          <h1 style="color:green">You already have this asset !</h1>
           {% else %}
           <a href="/library/{{library.uuid}}/buy" class="btn btn-lg btn-custom">Buy Asset</a>
           {% endif %}

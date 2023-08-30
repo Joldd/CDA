@@ -120,7 +120,19 @@ app.get('/library/:uuid', (req, res) => {
                 res.render("libraries/one.html.twig", context);
             }
             else{
-                res.render("libraries/one.html.twig", context);
+                user_library_model.User_Library.checkPurchase(user.id , library.id).then((user_library_result) => {
+                    if(user_library_result.length > 0){
+                        context.owned = true;
+                        res.render("libraries/one.html.twig", context);
+                    }
+                    else{
+                        res.render("libraries/one.html.twig", context);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                    res.render("404.html.twig", context);
+                }) 
             }
         })
         .catch(() => {
@@ -226,22 +238,33 @@ app.get('/library/:uuid/buy', (req, res) => {
             context.userSession = user;
             user.getCredits().then((creditsUser) => {
                 if (creditsUser.length >= library.price){
-                    library.getCredits(user.id).then((creditsSpent) => {
-                        for (i=0 ; i<creditsSpent.length ; i++){                       
-                            credit_model.Credit.fromResult(creditsSpent[i]).delete();
+                    user_library_model.User_Library.checkPurchase(user.id,library.id).then((user_library_result) => {
+                        if (user_library_result.length <= 0){
+                            library.getCredits(user.id).then((creditsSpent) => {
+                                for (i=0 ; i<creditsSpent.length ; i++){                       
+                                    credit_model.Credit.fromResult(creditsSpent[i]).delete();
+                                }
+                                let user_library = new user_library_model.User_Library();
+                                user_library.user_id = user.id;
+                                user_library.library_id = library.id;
+                                user_library.create();
+                                library.salesNumber++;
+                                library.update();
+                                res.redirect("/library/"+library.uuid);
+                            })
+                            .catch((err) => {
+                                console.log(err);
+                                res.render("404.html.twig", context);
+                            })
                         }
-                        let user_library = new user_library_model.User_Library();
-                        user_library.user_id = user.id;
-                        user_library.library_id = library.id;
-                        user_library.create();
-                        context.message = "Library bought !";
-                        context.color = "green";
-                        res.render("libraries/one.html.twig", context);
+                        else{
+                            res.render("libraries/one.html.twig", context);
+                        }
                     })
                     .catch((err) => {
                         console.log(err);
                         res.render("404.html.twig", context);
-                    })   
+                    })  
                 }
                 else {
                     context.message = "No enough credits !";
