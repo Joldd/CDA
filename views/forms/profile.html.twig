@@ -14,7 +14,7 @@
     <h1 class="d-flex justify-content-center" style=" padding-top:5%; font-weight: 700; font-size:400%;">PROFILE</h1>
 
       <div class="d-flex justify-content-center" style=" padding-top:5%;">
-        <form class="" action="/profile" method="post" >
+        <form class="" action="/profile" method="post" enctype="multipart/form-data">
           <table >
             <tr>
                 <td class ="p-2">
@@ -46,6 +46,11 @@
                   <input class="form-control" name="image" type="file">
                 </div>
               </td>
+              {% if userSession.image|length > 0 %}
+              <td><img src="./media/profile/{{userSession.image}}.png" alt="image" height="50"></td>
+              {% else %}
+              <td><img src="./static/img/profile.png" alt="image" height="50"></td>
+              {% endif %}
             </tr>
           {% if message is defined %}
           <div class="d-flex justify-content-center mt-3" style="color:{{color}}">           

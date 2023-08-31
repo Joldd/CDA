@@ -133,5 +133,4 @@ dist
 data-db/
 
 # Media
-media/img
-media/libraries
+media

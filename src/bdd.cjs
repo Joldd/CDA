@@ -172,7 +172,7 @@ function createTables(){
 
     //ATTENTION => RESET
     // con.query(
-    //   `DROP TABLE approvement, receipts, users_libraries, libraries_tags, libraries, credits, discounts,tags
+    //   `DROP TABLE approvement, users_libraries, libraries_tags, libraries, credits, discounts,tags, users
     //   );`
     //   , 
     //   function (err, result) 

@@ -3,6 +3,7 @@ const { Router } = require('express');
 const app = Router();
 const user_model = require("../Models/user_model.cjs");
 const library_model = require("../Models/library_model.cjs");
+const { v4: uuidv4 } = require('uuid');
 
 app.get('/inscription', (req, res) => {
   let context = {
@@ -94,6 +95,18 @@ app.post('/profile', (req, res) => {
       }
       if (req.body.password.length > 0){
         user.password = req.body.password;
+      }
+      if(req.files != null){
+        let uploadedImage = req.files.image;  
+        console.log("a");
+        user.image = uuidv4();
+        let uploadImagePath = "media/profile/"+user.image+".png";
+        uploadedImage.mv(uploadImagePath, function (err) {
+            if (err) {
+                console.log(err);
+                console.log("Failed !!");
+            } else console.log("Successfully Uploaded !!");
+        });
       }
       user.update();
       req.session.user_id = user.id;

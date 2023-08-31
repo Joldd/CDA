@@ -35,17 +35,17 @@ app.set("twig options", {
   strict_variables: false
 });
 
-app.get('/', (req, res) => {
-  let context = {
-  };
-  user_model.User.findById(req.session.user_id).then((user) => {
-    context.userSession = user;
-    res.render('index.html.twig' , context);
-  })
-  .catch(() => {
-    res.render('index.html.twig' , context);
-  });
-});
+// app.get('/', (req, res) => {
+//   let context = {
+//   };
+//   user_model.User.findById(req.session.user_id).then((user) => {
+//     context.userSession = user;
+//     res.render('index.html.twig' , context);
+//   })
+//   .catch(() => {
+//     res.render('index.html.twig' , context);
+//   });
+// });
 
 app.use(user_controller);
 app.use(librarie_controller);

@@ -70,7 +70,7 @@ app.post('/newLibrary', (req, res) => {
     });
 });
 
-app.get('/store', (req, res) => {
+app.get('/', (req, res) => {
     let context = {
     };
     library_model.Library.getAll().then((libraries) => {
@@ -277,7 +277,7 @@ app.get('/library/:uuid/buy', (req, res) => {
             });
         })
         .catch(() => {
-            res.render("404.html.twig", context);
+            res.redirect("/login");
         });
     })
     .catch(() => {
