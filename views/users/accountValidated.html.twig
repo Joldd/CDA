@@ -12,14 +12,25 @@
 
     <main>
         <h1 class="d-flex justify-content-center" style=" padding-top:5%; font-weight: 700; font-size:400%;">CONGRATULATION!!</h1>
-        <h1 class="d-flex justify-content-center" style=" font-weight: 700; font-size:400%;">YOU CREATED YOUR ACCOUNT</h1>
 
+        {% if userSession.type == 0 %}
+          <h1 class="d-flex justify-content-center" style=" font-weight: 700; font-size:400%;">YOU CREATED YOUR USER ACCOUNT</h1>
+        {% else %}
+          <h1 class="d-flex justify-content-center" style=" font-weight: 700; font-size:400%;">YOU CREATED YOUR CREATOR ACCOUNT</h1>
+        {% endif %}
+        
         <p class="d-flex justify-content-center" style=" padding-top:5%; font-weight: 400; font-size:200%;">Watch this video to learn how to buy and download assets</p>
         <p class="d-flex justify-content-center" style=" font-weight: 400; font-size:200%;">OR</p>
 
-        <div class="d-flex justify-content-center">
-            <a href="/" class="btn btn-lg btn-custom">GO BACK HOME</a>
-        </div>
+        {% if userSession.type == 0 %}
+          <div class="d-flex justify-content-center">
+              <a href="/" class="btn btn-lg btn-custom">GO BACK HOME</a>
+          </div>
+        {% else %}
+          <div class="d-flex justify-content-center">
+              <a href="/libraries" class="btn btn-lg btn-custom">GO BACK HOME</a>
+          </div>
+        {% endif %}
     </main>
     
   </body>

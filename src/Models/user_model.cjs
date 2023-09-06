@@ -15,6 +15,7 @@ class User {
       this.siren = null;
       this.paypalAdress = "";
       this.kbis = "";
+      this.type = null;
     }
   
     static fromResult(result){
@@ -31,6 +32,7 @@ class User {
       user.siren = result.siren;
       user.paypalAdress = result.paypalAdress;
       user.kbis = result.kbis;
+      user.type = result.type;
       return user;
     }
   
@@ -87,8 +89,9 @@ class User {
             societyAdress,
             siren,
             paypalAdress,
-            kbis)
-            VALUES(?,?,?,?,?,?,?,?,?,?,?)`
+            kbis,
+            type)
+            VALUES(?,?,?,?,?,?,?,?,?,?,?,?)`
           ,
           [
             this.name, 
@@ -101,7 +104,8 @@ class User {
             this.societyAdress, 
             this.siren, 
             this.paypalAdress, 
-            this.kbis
+            this.kbis,
+            this.type
           ]
           , 
           (function (err, result) 
@@ -130,7 +134,8 @@ class User {
         societyAdress = ?,
         siren = ?,
         paypalAdress = ?,
-        kbis = ?
+        kbis = ?,
+        type = ?
         WHERE id = ?;`
         ,
         [
@@ -145,6 +150,7 @@ class User {
           this.siren,
           this.paypalAdress,
           this.kbis,
+          this.type,
           this.id
         ]
         , 

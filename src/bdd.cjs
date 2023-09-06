@@ -27,6 +27,7 @@ function createTables(){
         siren INT,
         paypalAdress VARCHAR(255),
         kbis VARCHAR(255),
+        type INT,
         PRIMARY KEY (id)
       );`
       , 

@@ -1,47 +1,45 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <title>Inscription</title>
-    {% include 'includecss.html.twig' %}
-    {% include 'includescripts.html.twig' %}
-  </head>
 
-  <body style="background-color :#1C1F24; color:white">
+<head>
+  <title>Inscription</title>
+  {% include 'includecss.html.twig' %}
+  {% include 'includescripts.html.twig' %}
+</head>
 
-    {% include 'header.html.twig' %}
+<body style="background-color :#1C1F24; color:white">
 
-    <main >
+  {% include 'header.html.twig' %}
 
-      <h1 class="d-flex justify-content-center mt-3" style="font-weight: 700; font-size:400%;">Create an User Account</h1>
+  <main>
 
-      <!-- Boutons -->
-      <div class="d-flex justify-content-md-around" style="height: 500px; ;align-items: center;">
-        
-        <ul >
-          <li class="list-group-item mb-3">
-            <a href="/inscriptionUser" >
-              <button class="btn btn-lg btn-custom pt-0 pb-0" style="font-size:500%; padding-left: 40%; padding-right: 40%;">PERSO</button>
-            </a> 
-          </li>
-          <li class="fw-semibold ms-5">Can't sell your game</li>
-          <li class="fw-semibold ms-5">Licenses can't be transfered</li>
-          <li class="fw-semibold ms-5">Licenses are cheaper</li>
-        </ul>
-        
-        <ul class="">
-          <li class="list-group-item mb-3">
-            <a href="/inscriptionCreator" >
-              <button class="btn btn-lg btn-custom pt-0 pb-0" style="font-size:500%; padding-left: 40%; padding-right: 40%; font-size:500%">PRO</button>
-            </a> 
-            <li class="fw-semibold ms-5">Can sell your game</li>
-            <li class="fw-semibold ms-5">Licenses can be transfered</li>
-            <li class="fw-semibold ms-5">Account link to a society</li>
-        </ul>
+    <h1 class="d-flex justify-content-center mt-3" style="font-weight: 700; font-size:400%;">Create an Account</h1>
 
-      </div>
+    <!-- Boutons -->
+    <div class="d-flex justify-content-md-around" style="height: 500px; ;align-items: center;">
 
-    </main>
-    
-  </body>
+      <ul>
+        <li class="list-group-item mb-3">
+          <a class="btn btn-lg btn-custom pt-0 pb-0 ps-5 pe-5" style="font-size:500%;" href="/inscriptionUser">USER</a>
+        </li>
+        <li class="fw-semibold ms-5">Buy libraries you want</li>
+        <li class="fw-semibold ms-5">Use them to create your best game</li>
+        <li class="fw-semibold ms-5">Like and follow creator</li>
+      </ul>
+
+      <ul class="">
+        <li class="list-group-item mb-3">
+          <a class="btn btn-lg btn-custom pt-0 pb-0 ps-5 pe-5" style="font-size:500%;" href="/inscriptionCreator">CREATOR</a>
+        </li>
+        <li class="fw-semibold ms-5">Upload your best libraries</li>
+        <li class="fw-semibold ms-5">Become a famous creator</li>
+        <li class="fw-semibold ms-5">Earn credits for each sale</li>
+      </ul>
+
+    </div>
+
+  </main>
+
+</body>
 
 </html>

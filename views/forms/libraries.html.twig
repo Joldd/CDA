@@ -14,19 +14,9 @@
       {# Titre #}
       <h1 class="d-flex justify-content-center mt-3" style="font-weight: 700; font-size:400%;">My libraries</h1>
 
-      {# Boutton fric #}
-      {% if credits is defined %}
-      <div class="d-flex justify-content-end">Account : {{credits.length}} <i class="bi bi-currency-bitcoin"></i></div>
-      {% endif %}
-      <div class="d-flex justify-content-end">
-        <a href="/credits" class="btn btn-primary btn-lg me-3">Buy credits</a>
-      </div>
-
-
       {# Boutton d'ajout d'une librarie #}
       <div class="d-flex justify-content-center">
         <button id="newLibrary" class="btn btn-success btn-lg">Add library</button>
-         <a href="/libraries/history" id="history" class="ms-3 btn btn-primary btn-lg">Purchase history</a>
       </div>
 
       {# Menu d'ajout d'une librarie #}
@@ -46,7 +36,7 @@
             <tr>
               <td class="p-2"> 
               <label style="color: gray;" for="library">file.lib</label>
-              <input class="form-control p-2" name="library" type="file" placeholder="library">
+              <input class="form-control p-2" name="library" type="file" placeholder="library" required>
               </td>
             </tr>
             <tr>
@@ -63,7 +53,7 @@
             <tr>
               <td class="p-2"> 
               <label style="color: gray;" for="image">Image</label>
-              <input class="form-control p-2" name="image" type="file" placeholder="image">
+              <input class="form-control p-2" name="image" type="file" placeholder="image" required>
               </td>
             </tr>
             <tr>

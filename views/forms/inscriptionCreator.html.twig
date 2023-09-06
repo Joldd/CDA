@@ -11,10 +11,10 @@
     {% include 'header.html.twig' %}
 
    <main>
-      <h1 class="d-flex justify-content-center" style=" padding-top:3%; font-weight: 700; font-size:400%;">Create an User Account : PERSO</h1>
+      <h1 class="d-flex justify-content-center" style=" padding-top:3%; font-weight: 700; font-size:400%;">Create an Account : CREATOR</h1>
 
       <div class="d-flex justify-content-center">
-        <form class="" action="/inscriptionUser" method="post" >
+        <form class="" action="/inscriptionCreator" method="post" >
           <table >
             <tr>
                 <td class ="p-2">
@@ -25,8 +25,8 @@
                 </td>
                 <td>
                   <div class="form-floating mt-3">
-                    <input class="form-control" name="mail" type="text" placeholder="mail" required>
-                    <label style="color: gray;" for="mail">Email</label>
+                    <input class="form-control" name="email" type="text" placeholder="email" required>
+                    <label style="color: gray;" for="email">Email</label>
                   </div>
                 </td>
             </tr>
@@ -75,7 +75,7 @@
             <tr>
                 <td class ="p-2">
                   <div class="form-floating mt-3">
-                    <input class="form-control" name="sirenNumber" type="text" placeholder="sirenNumber" required>
+                    <input class="form-control" name="sirenNumber" type="number" placeholder="sirenNumber" required>
                     <label style="color: gray;" for="sirenNumber">n° SIREN</label>
                   </div>
                 </td>

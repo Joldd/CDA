@@ -28,3 +28,11 @@
 .btnLib:hover {
   color:black;
 }
+
+.blockLibrary {
+  transition: transform .2s;
+}
+
+.blockLibrary:hover {
+  transform: scale(1.1);
+}

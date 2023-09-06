@@ -12,6 +12,14 @@
 
     <main >
 
+      {# Boutton fric #}
+      {% if credits is defined %}
+        <div class="d-flex justify-content-end">Account : {{credits.length}} <i class="bi bi-currency-bitcoin"></i></div>
+      {% endif %}
+        <div class="d-flex justify-content-end">
+          <a href="/credits" class="btn btn-primary btn-lg me-3">Buy credits</a>
+        </div>
+
       {# Tableau des achats #}
       <h3 class="d-flex justify-content-center mt-5">Your purchases</h3>
 
