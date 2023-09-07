@@ -93,6 +93,7 @@ app.post('/login', (req, res) => {
   user_model.User.findByMail(req.body.email).then((user) => {
       if (user.password == req.body.password) {
         req.session.user_id = user.id;
+        console.log(req.session.user_id);
         if (user.type == 0){
           res.redirect("/");
         }

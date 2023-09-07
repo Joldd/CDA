@@ -16,9 +16,9 @@
                 <a href="/libraries/history" id="libraries" class="btn btn-custom m-3">Purchase History</a>
                 <a href="/profile" title="Profil" id="profile" class="p-1 btn btn-custom m-3">
                     {% if userSession.image|length > 0 %}
-                        <td><img src="./media/profile/{{userSession.image}}.png" alt="image" height="30"></td>
+                        <td><img src="/media/profile/{{userSession.image}}.png" alt="image" height="30"></td>
                     {% else %}
-                        <td><img src="./static/img/profile.png" alt="image" height="30"></td>
+                        <td><img src="/static/img/profile.png" alt="image" height="30"></td>
                     {% endif %}
                 </a>
             </div>
@@ -28,9 +28,9 @@
                 <a href="/libraries" id="libraries" class="btn btn-custom m-3">My libraries</a>
                 <a href="/profile" title="Profil" id="profile" class="p-1 btn btn-custom m-3">
                     {% if userSession.image|length > 0 %}
-                        <td><img src="./media/profile/{{userSession.image}}.png" alt="image" height="30"></td>
+                        <td><img src="/media/profile/{{userSession.image}}.png" alt="image" height="30"></td>
                     {% else %}
-                        <td><img src="./static/img/profile.png" alt="image" height="30"></td>
+                        <td><img src="/static/img/profile.png" alt="image" height="30"></td>
                     {% endif %}
                 </a>
             </div>

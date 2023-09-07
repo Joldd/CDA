@@ -211,6 +211,24 @@ class Library {
         );
       });
     }
+
+    getOwner(){
+      return new Promise((resolve, reject) => {
+        tables.con.query(
+          `SELECT * FROM users WHERE id = ?;`
+          ,
+          [
+            this.owner_id
+          ]
+          , 
+          function (err, result) 
+          {
+            if (err || result.length <= 0) reject(err);
+            else resolve(result[0]);
+          }
+        );
+      });
+    }
   }
 
   module.exports = {Library};

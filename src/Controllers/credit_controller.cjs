@@ -8,7 +8,7 @@ app.get('/credits', (req, res) => {
     };
     user_model.User.findById(req.session.user_id).then((user) => {
       credit_model.createMultiple(100, user.id);
-      res.redirect("/libraries");
+      res.redirect("/libraries/history");
     })
     .catch((err) => {
       console.log(err);
