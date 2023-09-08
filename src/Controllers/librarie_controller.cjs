@@ -426,4 +426,27 @@ app.get('/libraries/history', (req, res) => {
         });
 });
 
+app.get('/manage', (req, res) => {
+    let context = {};
+    user_model.User.findById(req.session.user_id).then((user) => {
+            if (user.type == 2) {
+                context.userSession = user;
+                library_model.Library.getAllValidating().then((libraries) => {
+                    context.libraries = libraries;
+                    res.render("libraries/manage.html.twig",context);
+                })
+                .catch((err) => {
+                    res.render("libraries/manage.html.twig",context);
+                });
+            }
+            else {
+                res.render("404.html.twig", context);
+            }
+
+        })
+        .catch(() => {
+            res.render('404.html.twig', context);
+        });
+});
+
 module.exports = app;

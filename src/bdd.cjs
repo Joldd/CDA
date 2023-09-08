@@ -86,7 +86,7 @@ function createTables(){
         description TEXT NOT NULL DEFAULT '',
         type ENUM('Scene','Character','Item','Image_and_police'),
         price INT NOT NULL,
-        state ENUM('accepted','validating','rejected'),
+        state ENUM('accepted','validating','rejected') DEFAULT 'validating',
         releaseDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
         salesNumber INT NOT NULL,
         encouragementsNumber INT NOT NULL,
@@ -171,17 +171,9 @@ function createTables(){
       }
     );
 
-    //ATTENTION => RESET
-    // con.query(
-    //   `DROP TABLE approvement, users_libraries, libraries_tags, libraries, credits, discounts,tags, users
-    //   );`
-    //   , 
-    //   function (err, result) 
-    //   {
-    //     if (err) throw err;
-    //     console.log("Table prices created");
-    //   }
-    // );
+
+    // DROP TABLE approvement, users_libraries, libraries_tags, libraries, credits, discounts,tags, users
+
 
   });
 }

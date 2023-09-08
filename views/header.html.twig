@@ -22,10 +22,22 @@
                     {% endif %}
                 </a>
             </div>
-        {% else %}
+        {% elseif userSession.type == 1%}
             <div>
                 <a href="/" id="store" class="btn btn-custom m-3">Store</a>
                 <a href="/libraries" id="libraries" class="btn btn-custom m-3">My libraries</a>
+                <a href="/profile" title="Profil" id="profile" class="p-1 btn btn-custom m-3">
+                    {% if userSession.image|length > 0 %}
+                        <td><img src="/media/profile/{{userSession.image}}.png" alt="image" height="30"></td>
+                    {% else %}
+                        <td><img src="/static/img/profile.png" alt="image" height="30"></td>
+                    {% endif %}
+                </a>
+            </div>
+        {% else %}
+            <div>
+                <a href="/" id="store" class="btn btn-custom m-3">Store</a>
+                <a href="/manage" id="libraries" class="btn btn-custom m-3">Manage</a>
                 <a href="/profile" title="Profil" id="profile" class="p-1 btn btn-custom m-3">
                     {% if userSession.image|length > 0 %}
                         <td><img src="/media/profile/{{userSession.image}}.png" alt="image" height="30"></td>
@@ -38,7 +50,7 @@
     {% else %}
         <div>
             <a href="/" id="store" class="btn btn-custom m-3">Store</a>
-            <a href="/inscription" id="inscription" class="btn btn-custom m-3">Inscription</a>
+            <a href="/inscription" id="inscription" class="btn btn-custom m-3">Register</a>
             <a href="/login" id="login" class="btn btn-custom m-3">Login</a>
         </div>
     {% endif %}

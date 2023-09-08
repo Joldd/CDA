@@ -22,8 +22,10 @@
         </div>
         <div style="margin-left: 50%;"> 
           <h1 class="" style="font-weight: 700; font-size:400%;">{{library.title}}</h1> 
-          <p class="mt-5">Price : {{library.price}} <i class="bi bi-currency-bitcoin"></i></p>
-          <p class="mt-5">Creator : {{library.ownerName}}</p>
+          <p class="mt-5 mb-4">Price : {{library.price}} <i class="bi bi-currency-bitcoin"></i></p>
+          <p class="mb-0">Creator : {{library.ownerName}}</p>
+          <p class="mb-0">Sales : {{library.salesNumber}} <i class="bi bi-download"></i></p>
+          <p class="mb-4">Encouragements : {{library.encouragementsNumber}} <i class="bi bi-hand-thumbs-up-fill"></i></p>
           {% if myLibrary %}
           <a href="/library/{{library.uuid}}/modify" class="btn btn-lg btn-warning">Modify</a>
           <a href="/library/{{library.uuid}}/delete" class="ms-2 btn btn-lg btn-danger">Delete</a>

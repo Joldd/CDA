@@ -29,6 +29,20 @@ class Library {
         );
       });
     }
+
+    static getAllValidating(){
+      return new Promise((resolve, reject) => {
+        tables.con.query(
+          `SELECT * FROM libraries WHERE state = 'validating';`
+          ,
+          function (err, result) 
+          {
+            if (err || result.length <= 0) reject(err);
+            else resolve(result);
+          }
+        );
+      });
+    }
   
     static fromResult(result){
       let library = new Library();
