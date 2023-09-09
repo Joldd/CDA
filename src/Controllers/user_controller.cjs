@@ -8,22 +8,22 @@ const {
   v4: uuidv4
 } = require('uuid');
 
-app.get('/inscription', (req, res) => {
+app.get('/register', (req, res) => {
   let context = {};
-  res.render('users/inscription.html.twig', context);
+  res.render('users/register.html.twig', context);
 });
 
-app.get('/inscriptionUser', (req, res) => {
+app.get('/registerUser', (req, res) => {
   let context = {};
-  res.render('forms/inscriptionUser.html.twig', context);
+  res.render('forms/registerUser.html.twig', context);
 });
 
-app.post('/inscriptionUser', (req, res) => {
+app.post('/registerUser', (req, res) => {
   let context = {};
   if (req.body.password == req.body.repassword) {
     user_model.User.findByMail(req.body.email).then(() => {
         context.message = "This email address has already been registered";
-        res.render('forms/inscriptionUser.html.twig', context);
+        res.render('forms/registerUser.html.twig', context);
       })
       .catch(() => {
         let user = new user_model.User();
@@ -37,26 +37,26 @@ app.post('/inscriptionUser', (req, res) => {
           })
           .catch((err) => {
             context.message = "User already exists";
-            res.render('forms/inscriptionUser.html.twig', context);
+            res.render('forms/registerUser.html.twig', context);
           });
       })
   } else {
     context.message = "Passwords do not match";
-    res.render('forms/inscriptionUser.html.twig', context);
+    res.render('forms/registerUser.html.twig', context);
   }
 });
 
-app.get('/inscriptionCreator', (req, res) => {
+app.get('/registerCreator', (req, res) => {
   let context = {};
-  res.render('forms/inscriptionCreator.html.twig', context);
+  res.render('forms/registerCreator.html.twig', context);
 });
 
-app.post('/inscriptionCreator', (req, res) => {
+app.post('/registerCreator', (req, res) => {
   let context = {};
   if (req.body.password == req.body.repassword) {
     user_model.User.findByMail(req.body.email).then(() => {
         context.message = "This email address has already been registered";
-        res.render('forms/inscriptionCreator.html.twig', context);
+        res.render('forms/registerCreator.html.twig', context);
       })
       .catch(() => {
         let user = new user_model.User();
@@ -74,12 +74,12 @@ app.post('/inscriptionCreator', (req, res) => {
           })
           .catch((err) => {
             context.message = "User already exists";
-            res.render('forms/inscriptionCreator.html.twig', context);
+            res.render('forms/registerCreator.html.twig', context);
           });
       })
   } else {
     context.message = "Passwords do not match";
-    res.render('forms/inscriptionCreator.html.twig', context);
+    res.render('forms/registerCreator.html.twig', context);
   }
 });
 

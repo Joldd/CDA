@@ -15,7 +15,17 @@
       {% if message is defined %}
       <div class="mt-2 text-center" style="color:{{color}}">{{message}}</div>
       {% endif %}
-      <div></div>
+
+      {% if myLibrary %}
+        {% if library.state == "validating" %}
+        <h1 class="text-warning position-absolute end-0 m-3">Validating</h1>
+        {% elseif library.state == "accepted" %}
+        <h1 class="text-success position-absolute end-0 m-3">Accepted</h1>
+        {% else %}
+        <h1 class="text-danger position-absolute end-0 m-3">Rejected</h1>
+        {% endif %}
+      {% endif %}
+
       <div class="mt-5" style="width: 100%;">
         <div class="d-flex justify-content-center"  style="width: 50%; float: left;"> 
             <img src="/media/img/{{library.image}}.png" alt="library-image" height="200">
@@ -27,6 +37,9 @@
           <p class="mb-0">Sales : {{library.salesNumber}} <i class="bi bi-download"></i></p>
           <p class="mb-4">Encouragements : {{library.encouragementsNumber}} <i class="bi bi-hand-thumbs-up-fill"></i></p>
           {% if myLibrary %}
+            {% if library.state == "rejected" %}
+            <a href="/library/{{library.uuid}}/manage/validating" class="btn btn-lg btn-success">Re-Send</a>
+            {% endif %}
           <a href="/library/{{library.uuid}}/modify" class="btn btn-lg btn-warning">Modify</a>
           <a href="/library/{{library.uuid}}/delete" class="ms-2 btn btn-lg btn-danger">Delete</a>
           {% elseif owned %}

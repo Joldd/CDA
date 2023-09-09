@@ -474,6 +474,12 @@ app.get('/library/:uuid/manage/:state', (req, res) => {
                         library.update();
                         res.redirect("/manage");
                     }
+                    else if (user.type == 1 && user.id == library.owner_id && req.params.state == "validating" && library.state == "rejected")
+                    {
+                        library.state = req.params.state;
+                        library.update();
+                        res.redirect("/libraries");
+                    }
                     else {
                         res.render("404.html.twig", context);
                     }  
