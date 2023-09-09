@@ -43,6 +43,34 @@ class Library {
         );
       });
     }
+
+    static getAllAccepted(){
+      return new Promise((resolve, reject) => {
+        tables.con.query(
+          `SELECT * FROM libraries WHERE state = 'accepted';`
+          ,
+          function (err, result) 
+          {
+            if (err || result.length <= 0) reject(err);
+            else resolve(result);
+          }
+        );
+      });
+    }
+
+    static getAllRejected(){
+      return new Promise((resolve, reject) => {
+        tables.con.query(
+          `SELECT * FROM libraries WHERE state = 'rejected';`
+          ,
+          function (err, result) 
+          {
+            if (err || result.length <= 0) reject(err);
+            else resolve(result);
+          }
+        );
+      });
+    }
   
     static fromResult(result){
       let library = new Library();

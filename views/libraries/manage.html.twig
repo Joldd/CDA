@@ -1,52 +1,131 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <title>Manage</title>
-    {% include 'includecss.html.twig' %}
-    {% include 'includescripts.html.twig' %}
-  </head>
 
-  <body style="background-color :#1C1F24; color:white">
+<head>
+  <title>Manage</title>
+  {% include 'includecss.html.twig' %}
+  {% include 'includescripts.html.twig' %}
+</head>
 
-    {% include 'header.html.twig' %}
+<body style="background-color :#1C1F24; color:white">
 
-    <main class>
-      {# Titre #}
-      <h1 class="d-flex justify-content-center mt-3" style="font-weight: 700; font-size:400%;">Manage</h1>
+  {% include 'header.html.twig' %}
 
-      {# Tableau des libraries en cours de validation #}
-      <h3 class="d-flex justify-content-center mt-5">Libraries validating</h3>
+  <main class>
+    {# Titre #}
+    <h1 class="d-flex justify-content-center mt-3" style="font-weight: 700; font-size:400%;">Manage</h1>
 
-      {% if libraries.length <= 0 %}
-      <div class="form-floating p-1 text-center">List empty</div>
-      {% else %}
-      <table class="d-flex justify-content-center mt-3">
-        <tr>
-          <td class="b form-floating p-3 text-center fw-bold">Name</td>
-          <td class="form-floating p-3 text-center fw-bold">Picture</td>
-          <td class="form-floating p-3 text-center fw-bold">Type</td>
-          <td class="form-floating p-3 text-center fw-bold">Date</td>
-          <td class="form-floating p-3 text-center fw-bold">Price</td>
-          <td class="form-floating p-3 text-center fw-bold">Action</td>
-        </tr>
-        {% for library in libraries %}       
-          <tr onclick="document.location='/library/{{library.uuid}}'" class="gridLine">
-            <td class="form-floating p-3 text-center">{{library.title}}</td>
-            <td class="form-floating p-3 text-center"><img src="/media/img/{{library.image}}.png" alt="" height="100"></td>
-            <td class="form-floating p-3 text-center">{{library.type}}</td>
-            <td class="form-floating p-3 text-center">{{library.releaseDate.getMonth()}} / {{library.releaseDate.getDate()}} / {{library.releaseDate.getFullYear()}}</td>
-            <td class="form-floating p-3 text-center">{{library.price}} <i class="bi bi-currency-bitcoin"></i></td>
-            <td class="form-floating p-3 text-center">
-              <a class="btnLib bi bi-check me-2"></a>
-              <a class="btnLib bi bi-shield-x"></a>
-            </td>
-          </tr>
-        {% endfor %}
-      {% endif %}
-      </table>
 
-    </main>
-    
-  </body>
+    <div class="mt-5 container text-center" style="max-width:1800px">
+      <div class="row">
+
+        <div class="col">
+          {# Tableau des libraries en cours de validation #}
+          <h3 class="d-flex justify-content-center mt-5">Libraries validating</h3>
+
+          {% if librariesValidating.length <= 0 %}
+          <div class="form-floating p-1 text-center">List empty</div>
+          {% else %}
+          <table class="d-flex justify-content-center mt-3">
+            <tr>
+              <td class="b form-floating p-2 text-center fw-bold">Name</td>
+              <td class="form-floating p-2 text-center fw-bold">Picture</td>
+              <td class="form-floating p-2 text-center fw-bold">Type</td>
+              <td class="form-floating p-2 text-center fw-bold">Date</td>
+              <td class="form-floating p-2 text-center fw-bold">Price</td>
+              <td class="form-floating p-2 text-center fw-bold">Action</td>
+            </tr>
+            {% for library in librariesValidating %}
+            <tr onclick="document.location='/library/{{library.uuid}}'" class="gridLine">
+              <td class="form-floating p-2 text-center">{{library.title}}</td>
+              <td class="form-floating p-2 text-center"><img src="/media/img/{{library.image}}.png" alt="" height="100">
+              </td>
+              <td class="form-floating p-2 text-center">{{library.type}}</td>
+              <td class="form-floating p-2 text-center">{{library.releaseDate.getMonth()}} /
+                {{library.releaseDate.getDate()}} / {{library.releaseDate.getFullYear()}}</td>
+              <td class="form-floating p-2 text-center">{{library.price}} <i class="bi bi-currency-bitcoin"></i></td>
+              <td class="form-floating p-2 text-center">
+                <a href="/library/{{library.uuid}}/manage/accepted" class="btnLib bi bi-check me-2"></a>
+                <a href="/library/{{library.uuid}}/manage/rejected" class="btnLib bi bi-shield-x"></a>
+              </td>
+            </tr>
+            {% endfor %}
+            {% endif %}
+          </table>
+        </div>
+
+        <div class="col">
+          {# Tableau des libraries validées #}
+          <h3 class="d-flex justify-content-center mt-5">Libraries accepted</h3>
+
+          {% if librariesAccepted.length <= 0 %}
+          <div class="form-floating p-1 text-center">List empty</div>
+          {% else %}
+          <table class="d-flex justify-content-center mt-3">
+            <tr>
+              <td class="b form-floating p-2 text-center fw-bold">Name</td>
+              <td class="form-floating p-2 text-center fw-bold">Picture</td>
+              <td class="form-floating p-2 text-center fw-bold">Type</td>
+              <td class="form-floating p-2 text-center fw-bold">Date</td>
+              <td class="form-floating p-2 text-center fw-bold">Price</td>
+              <td class="form-floating p-2 text-center fw-bold">Action</td>
+            </tr>
+            {% for library in librariesAccepted %}
+            <tr onclick="document.location='/library/{{library.uuid}}'" class="gridLine">
+              <td class="form-floating p-2 text-center">{{library.title}}</td>
+              <td class="form-floating p-2 text-center"><img src="/media/img/{{library.image}}.png" alt="" height="100">
+              </td>
+              <td class="form-floating p-2 text-center">{{library.type}}</td>
+              <td class="form-floating p-2 text-center">{{library.releaseDate.getMonth()}} /
+                {{library.releaseDate.getDate()}} / {{library.releaseDate.getFullYear()}}</td>
+              <td class="form-floating p-2 text-center">{{library.price}} <i class="bi bi-currency-bitcoin"></i></td>
+              <td class="form-floating p-2 text-center">
+                <a href="/library/{{library.uuid}}/manage/validating" class="btnLib bi bi-arrow-bar-down me-2"></a>
+              </td>
+            </tr>
+            {% endfor %}
+            {% endif %}
+          </table>
+        </div>
+
+        <div class="col">
+          {# Tableau des libraries refusée #}
+          <h3 class="d-flex justify-content-center mt-5">Libraries rejected</h3>
+
+          {% if librariesRejected.length <= 0 %}
+          <div class="form-floating p-1 text-center">List empty</div>
+          {% else %}
+          <table class="d-flex justify-content-center mt-3">
+            <tr>
+              <td class="b form-floating p-2 text-center fw-bold">Name</td>
+              <td class="form-floating p-2 text-center fw-bold">Picture</td>
+              <td class="form-floating p-2 text-center fw-bold">Type</td>
+              <td class="form-floating p-2 text-center fw-bold">Date</td>
+              <td class="form-floating p-2 text-center fw-bold">Price</td>
+              <td class="form-floating p-2 text-center fw-bold">Action</td>
+            </tr>
+            {% for library in librariesRejected %}
+            <tr onclick="document.location='/library/{{library.uuid}}'" class="gridLine">
+              <td class="form-floating p-2 text-center">{{library.title}}</td>
+              <td class="form-floating p-2 text-center"><img src="/media/img/{{library.image}}.png" alt="" height="100">
+              </td>
+              <td class="form-floating p-2 text-center">{{library.type}}</td>
+              <td class="form-floating p-2 text-center">{{library.releaseDate.getMonth()}} /
+                {{library.releaseDate.getDate()}} / {{library.releaseDate.getFullYear()}}</td>
+              <td class="form-floating p-2 text-center">{{library.price}} <i class="bi bi-currency-bitcoin"></i></td>
+              <td class="form-floating p-2 text-center">
+                <a href="/library/{{library.uuid}}/manage/validating" class="btnLib bi bi-arrow-bar-up me-2"></a>
+              </td>
+            </tr>
+            {% endfor %}
+            {% endif %}
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+</body>
 
 </html>

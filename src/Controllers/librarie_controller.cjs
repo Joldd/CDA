@@ -76,7 +76,7 @@ app.post('/newLibrary', (req, res) => {
 
 app.get('/', (req, res) => {
     let context = {};
-    library_model.Library.getAll().then((librariesResult) => {
+    library_model.Library.getAllAccepted().then((librariesResult) => {
             let owner_promises = [];
             for (i=0;i<librariesResult.length;i++){
                 owner_promises.push(library_model.Library.fromResult(librariesResult[i]).getOwner());
@@ -134,10 +134,7 @@ app.get('/library/:uuid', (req, res) => {
     library_model.Library.findByUuid(req.params.uuid).then((library) => {
             library.getOwner().then((ownerResult) => {
                 let owner = user_model.User.fromResult(ownerResult);
-                console.log(owner);
                 library.ownerName = owner.email;
-                console.log(owner.email);
-                console.log(library);
                 context.library = library;
                 user_model.User.findById(req.session.user_id).then((user) => {
                     context.userSession = user;
@@ -431,8 +428,25 @@ app.get('/manage', (req, res) => {
     user_model.User.findById(req.session.user_id).then((user) => {
             if (user.type == 2) {
                 context.userSession = user;
-                library_model.Library.getAllValidating().then((libraries) => {
-                    context.libraries = libraries;
+                let librariesValidating =[];
+                let librariesAccepted =[];
+                let librariesRejected =[];
+                library_model.Library.getAll().then((libraries) => {
+                    for(let i = 0 ; i<libraries.length ; i++){
+                        let library = library_model.Library.fromResult(libraries[i]);
+                        if (library.state == "validating"){
+                            librariesValidating.push(library);
+                        }
+                        else if (library.state == "accepted"){
+                            librariesAccepted.push(library);
+                        }
+                        else if (library.state == "rejected"){
+                            librariesRejected.push(library);
+                        }
+                    }
+                    context.librariesValidating = librariesValidating;
+                    context.librariesAccepted = librariesAccepted;
+                    context.librariesRejected = librariesRejected;
                     res.render("libraries/manage.html.twig",context);
                 })
                 .catch((err) => {
@@ -446,6 +460,30 @@ app.get('/manage', (req, res) => {
         })
         .catch(() => {
             res.render('404.html.twig', context);
+        });
+});
+
+app.get('/library/:uuid/manage/:state', (req, res) => {
+    let context = {};
+    library_model.Library.findByUuid(req.params.uuid).then((library) => {
+            context.library = library;
+            user_model.User.findById(req.session.user_id).then((user) => {
+                    if (user.type == 2){
+                        context.userSession = user;
+                        library.state = req.params.state;
+                        library.update();
+                        res.redirect("/manage");
+                    }
+                    else {
+                        res.render("404.html.twig", context);
+                    }  
+                })
+                .catch(() => {
+                    res.render("404.html.twig", context);
+                });
+        })
+        .catch(() => {
+            res.render("404.html.twig", context);
         });
 });
 
