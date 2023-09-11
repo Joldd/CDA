@@ -218,6 +218,22 @@ class User {
         );
       });
     } 
+
+    delete(){
+      tables.con.query(
+        `DELETE FROM users WHERE id = ?`
+        ,
+        [
+          this.id
+        ]
+        , 
+        (function (err, result) 
+        {
+          if (err) throw err;
+          console.log("User deleted");
+        }).bind(this)
+      );
+    }
   }
 
   module.exports = {User};
