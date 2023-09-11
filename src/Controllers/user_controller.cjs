@@ -3,6 +3,7 @@ const app = Router();
 const user_model = require("../Models/user_model.cjs");
 const library_model = require("../Models/library_model.cjs");
 const { v4: uuidv4 } = require('uuid');
+const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const hbs = require('nodemailer-express-handlebars');
 const path = require('path');
@@ -42,31 +43,50 @@ app.post('/registerUser', (req, res) => {
     .catch(() => {
       let user = new user_model.User();
       user.email = req.body.email;
-      user.password = req.body.password;
-      user.type = 0;
-      user.create().then(() => {
-        let mailOptions = {
-          from: 'cda.transporter@gmail.com',
-          to: req.body.email,
-          subject: 'CDA - Confirm your account',
-          template: 'validationMail',
-          context: {
-            id: user.id
-          }
-        };
-          transporter.sendMail(mailOptions, function(error, info){
-            if (error) {
-              console.log(error);
-              user.delete();
-              context.message = "Use an existing email adress";
-              res.render('forms/registerUser.html.twig', context);
-            } else {
-              console.log('Email sent: ' + info.response);
-              res.render('users/accountValidated.html.twig', context);
-            }
+      bcrypt.genSalt(9).then((salt) => {
+        user.salt = salt;
+        console.log(salt);
+        bcrypt.hash(req.body.password , salt).then((hash) => {
+          console.log("a");
+          user.password = hash;
+          user.type = 0;
+          user.create().then(() => {
+            let mailOptions = {
+              from: 'cda.transporter@gmail.com',
+              to: req.body.email,
+              subject: 'CDA - Confirm your account',
+              template: 'validationMail',
+              context: {
+                id: user.id
+              }
+            };
+            transporter.sendMail(mailOptions, function(error, info){
+              if (error) {
+                console.log(error);
+                user.delete();
+                context.message = "Use an existing email adress";
+                res.render('forms/registerUser.html.twig', context);
+              } else {
+                console.log('Email sent: ' + info.response);
+                res.render('users/accountValidated.html.twig', context);
+              }
+            })
+          })
+          .catch((err) => {
+            console.log(err);
+            res.render("404.html.twig", context);
+          });
         })
+        .catch((err) => {
+          console.log(err);
+          res.render("404.html.twig", context);
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.render("404.html.twig", context);
       });
-    })
+    })    
   } else {
     context.message = "Passwords do not match";
     res.render('forms/registerUser.html.twig', context);
@@ -132,28 +152,34 @@ app.get('/login', (req, res) => {
 app.post('/login', (req, res) => {
   let context = {};
   user_model.User.findByMail(req.body.email).then((user) => {
-      if (user.password == req.body.password) {
-        if (user.mailIsConfirmed == 1){
-          req.session.user_id = user.id;
-          if (user.type == 0){
-            res.redirect("/");
-          }
-          else if (user.type == 1){
-            res.redirect("/libraries");
-          }
-          else{
-            res.redirect("/manage");
-          }
+      bcrypt.compare(req.body.password , user.password, (err, result) => {
+        if (err){
+          console.log(err);
+          res.render("404.html.twig", context);
         }
-        else {
-          context.message = "You need to confirm your email adress";
+        else if (!result){
+          context.message = "Wrong password";
           res.render("forms/login.html.twig", context);
         }
-        
-      } else {
-        context.message = "Wrong password";
-        res.render("forms/login.html.twig", context);
-      }
+        else {
+          if (user.mailIsConfirmed == 1){
+            req.session.user_id = user.id;
+            if (user.type == 0){
+              res.redirect("/");
+            }
+            else if (user.type == 1){
+              res.redirect("/libraries");
+            }
+            else{
+              res.redirect("/manage");
+            }
+          }
+          else {
+            context.message = "You need to confirm your email adress";
+            res.render("forms/login.html.twig", context);
+          }
+        }
+      })          
     })
     .catch((err) => {
       console.log(err);

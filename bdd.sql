@@ -76,6 +76,7 @@ CREATE TABLE IF NOT EXISTS users_libraries(
   user_id INT NOT NULL,
   library_id INT NULL,
   purchaseDate DATETIME NOT NULL,
+  liked BOOLEAN DEFAULT FALSE,
   PRIMARY KEY (id),
   FOREIGN KEY (library_id) REFERENCES libraries(id),
   FOREIGN KEY (user_id) REFERENCES users(id)
