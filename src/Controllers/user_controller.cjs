@@ -12,7 +12,8 @@ let transporter = nodemailer.createTransport({
   auth: {
     user: 'cda.transporter@gmail.com',
     pass: 'uedcewwzfzeyhxrf'
-  }
+  },
+  tls : { rejectUnauthorized: false }
 });
 const handlebarOptions = {
   viewEngine: {
@@ -43,11 +44,9 @@ app.post('/registerUser', (req, res) => {
     .catch(() => {
       let user = new user_model.User();
       user.email = req.body.email;
-      bcrypt.genSalt(9).then((salt) => {
+      bcrypt.genSalt(Math.random()).then((salt) => {
         user.salt = salt;
-        console.log(salt);
         bcrypt.hash(req.body.password , salt).then((hash) => {
-          console.log("a");
           user.password = hash;
           user.type = 0;
           user.create().then(() => {
