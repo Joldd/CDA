@@ -182,12 +182,7 @@ class Library {
 
     delete(){
       tables.con.query(
-        `DELETE FROM libraries WHERE id = ?`
-        ,
-        [
-          this.id
-        ]
-        , 
+        `DELETE FROM libraries WHERE id = ?`, [this.id], 
         (function (err, result) 
         {
           if (err) throw err;
